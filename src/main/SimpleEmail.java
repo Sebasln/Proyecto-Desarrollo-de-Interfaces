@@ -18,9 +18,9 @@ public class SimpleEmail {
 	 */
 	public static void main(String[] args) {
 		
-		final String fromEmail = "damsalesianosdosa@gmail.com"; //EMAIL DE SALIDA
-		final String password = "111111111111111111"; //CONTRASEÑA DEL EMAIL DE SALIDA (aplicaciones de 3ros) Contraseñas de aplicación -- Verificación en 2 pasos
-		final String toEmail = "damsalesianosdosa@gmail.com"; // EMAIL DESTINATARIO
+		final String fromEmail = "sebastian.silva1.dosa@gmail.com"; //EMAIL DE SALIDA
+		final String password = "scwi osdz jpta kzeq"; //CONTRASEÑA DEL EMAIL DE SALIDA (aplicaciones de 3ros) Contraseñas de aplicación -- Verificación en 2 pasos
+		final String toEmail = "fp.ssilvanarro@salesianosdosa.com"; // EMAIL DESTINATARIO
 		
 		System.out.println("Configurando datos conexión SSL");
 		
