@@ -13,7 +13,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		System.out.println("Soy el main del proyecto");
-		
+		System.out.println("Prueba");
 	}
 
 	public static void recursosEmail() {
