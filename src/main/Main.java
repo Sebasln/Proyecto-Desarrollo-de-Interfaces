@@ -15,6 +15,7 @@ public class Main {
 		System.out.println("Soy el main del proyecto");
 		System.out.println("Prueba");
 		System.out.println("Prueba 2");
+		System.out.println("Prueba 3 clase");
 	}
 
 	public static void recursosEmail() {
