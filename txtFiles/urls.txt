@@ -1,4 +1,3 @@
-CATEGORIA;URL_1;SELECTOR_1;URL_2;SELECTOR_2;URL_3;SELECTOR_3
 ECONOMIA;https://www.expansion.com/;article.ue-c-cover-content h2;https://cincodias.elpais.com/;h2.c_t;https://www.eleconomista.es/;h1
 DEPORTES;https://www.marca.com/;h1;https://as.com/;h1;https://www.diariogol.com/;h1
 NACIONAL;https://www.elmundo.es/;article.ue-c-cover-content h2;https://www.larazon.es/;h2.card__headline;https://elpais.com/;h2.c_t

@@ -1,4 +1,4 @@
-package main;
+package otherResources;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
