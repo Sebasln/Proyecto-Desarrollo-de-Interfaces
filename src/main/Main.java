@@ -1,20 +1,18 @@
 package main;
 
-import java.io.FileNotFoundException;
-
-import fileLogic.UserLogic;
+import javax.swing.SwingUtilities;
 
 public class Main {
 
 	public static void main(String[] args) {
-		
-		try {
-			UserLogic.readUsers();
-			UserLogic.readUserPreferences();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				System.out.println("Creando barra de progreso...");
+				new windowContent.ProgressBarWindow();
+			}
+		});
 	}
+
+	
 
 }
