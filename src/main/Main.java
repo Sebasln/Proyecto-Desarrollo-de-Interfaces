@@ -2,17 +2,19 @@ package main;
 
 import java.io.FileNotFoundException;
 
-import fileLogic.FileManager;
+import fileLogic.UserLogic;
 
 public class Main {
 
 	public static void main(String[] args) {
+		
 		try {
-			FileManager.readUsers();
+			UserLogic.readUsers();
+			UserLogic.readUserPreferences();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 
 }

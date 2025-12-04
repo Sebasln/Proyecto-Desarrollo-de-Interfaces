@@ -1,9 +1,23 @@
 package objects;
 
+import java.util.ArrayList;
+
 public class User {
 
 	String username, password, email, role;
 	boolean state;
+	ArrayList<String> preferencesList = new ArrayList<>();
+	
+	public User(String username, String password, String email, String role, boolean state,
+			ArrayList<String> preferencesList) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.role = role;
+		this.state = state;
+		this.preferencesList = preferencesList;
+	}
 	public User(String username, String password, String email, String role, boolean state) {
 		super();
 		this.username = username;
@@ -42,11 +56,15 @@ public class User {
 	public void setState(boolean state) {
 		this.state = state;
 	}
+	public ArrayList<String> getPreferencesList() {
+		return preferencesList;
+	}
+	public void setPreferencesList(ArrayList<String> preferencesList) {
+		this.preferencesList = preferencesList;
+	}
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", email=" + email + ", role=" + role
-				+ ", state=" + state + "]";
+				+ ", state=" + state + ", preferencesList=" + preferencesList + "]";
 	}
-	
-	
 }
