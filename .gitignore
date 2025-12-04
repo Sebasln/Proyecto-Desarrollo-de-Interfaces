@@ -1,1 +1,6 @@
 /bin/
+compile.bat
+jdk/
+jdk.zip
+setup_jdk.ps1
+run.bat
