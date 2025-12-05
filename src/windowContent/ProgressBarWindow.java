@@ -3,13 +3,13 @@ package windowContent;
 import java.io.FileNotFoundException;
 
 import javax.swing.JProgressBar;
-import javax.swing.JFrame;
+import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
+
 
 import fileLogic.UserLogic;
 
-public class ProgressBarWindow extends JFrame {
-	/* Aquí irá la barra de carga del inicio del programa */
+public class ProgressBarWindow extends JWindow{
 
 	public ProgressBarWindow() {
 		JProgressBar progressBar = new JProgressBar();
@@ -41,12 +41,10 @@ public class ProgressBarWindow extends JFrame {
 							e.printStackTrace();
 						}
 					}
-				}
-
-				
+				}				
 				ProgressBarWindow.this.dispose();
-
 				SwingUtilities.invokeLater(new Runnable() {
+					
 				public void run() {
 					System.out.println("Creando ventana de login...");
 					new windowContent.LoginWindow();

@@ -82,7 +82,7 @@ public class UserLogic {
 				for (User u : usersList) {
 					if (u.getUsername().equals(username)) {
 						u.setPreferencesList(userPreferences);
-						System.out.println(u.toString());
+						//System.out.println(u.toString());
 					}
 				}
 			}
