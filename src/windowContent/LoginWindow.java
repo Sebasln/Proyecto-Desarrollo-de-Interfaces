@@ -91,33 +91,49 @@ public class LoginWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String password = passwordTField.getText();
 				String username = usernameTField.getText();
-				checkFieldsNullity(username, password, usernameWarningLabel, passwordWarningLabel,
-						autenticationFailedLabel);
+				if (username.isEmpty() || password.isEmpty()) {
+					checkFieldsNullity(username, password, usernameWarningLabel, passwordWarningLabel,
+							autenticationFailedLabel);
+					return;
+				}
 				System.out.println(username + ", " + password);
 
 				for (User u : UserLogic.usersList) {
-					String loadedUser = u.getUsername();
+					String loadedUser = u.getUsername();		
 					String loadedPassword = u.getPassword();
 
-					if (loadedUser.equals(username) || loadedPassword.equals(password)) {
-						autenticationFailedLabel.setVisible(true);
+					System.out.println(loadedUser + ", " + loadedPassword);
+
+					if (loadedUser.equals(username) && loadedPassword.equals(password)) {
+						System.out.println("Usuario autenticado");
+
+						//new MainWindow();
+						LoginWindow.this.dispose();					
+						return;
 					}
 				}
+				autenticationFailedLabel.setVisible(true);
 
 			}
 		});
 	}
 
 	public void checkFieldsNullity(String us, String pas, JLabel usWarn, JLabel passWarn, JLabel aFailed) {
-		if (us.equals("") || us == null) {
-			usWarn.setVisible(true);
-		}
-		if (pas.equals("") || pas == null) {
+		if ((us.equals("") || us == null) && (pas.equals("") || pas == null)) {
 			passWarn.setVisible(true);
-			return;
+			usWarn.setVisible(true);
+		} else if((us.equals("") || us == null) && (!(pas.equals("")) || pas != null)) {
+			usWarn.setVisible(true);
+		} else if((pas.equals("") || pas == null) && (!(us.equals("")) || us != null)) {
+			passWarn.setVisible(true);
+		} else{
+			usWarn.setVisible(false);
+			passWarn.setVisible(false);
+			aFailed.setVisible(false);
+
 		}
-		usWarn.setVisible(false);
-		passWarn.setVisible(false);
-		aFailed.setVisible(false);
+		
+		
+		
 	}
 }
