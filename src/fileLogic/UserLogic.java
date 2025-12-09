@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -32,13 +34,21 @@ public class UserLogic {
 				if (line.trim().isEmpty())
 					continue;
 
-				String[] userFields = line.split(";");
+				String[] userFields = line.split(";", -1); // -1 para mantener campos vacíos al final
 				String username = checkNullity(userFields[0], 0);
 				String password = checkNullity(userFields[1], 1);
 				String email = checkNullity(userFields[2], 2);
 
 				String userRole = checkRole(userFields[3]);
-				boolean userState = checkState(Integer.parseInt(userFields[4]));
+				int stateInt = 0;
+				try {
+					if (userFields.length > 4 && !userFields[4].isEmpty()) {
+						stateInt = Integer.parseInt(userFields[4]);
+					}
+				} catch (NumberFormatException e) {
+					System.err.println("Error parsing state for user " + username + ", defaulting to 0/True");
+				}
+				boolean userState = checkState(stateInt);
 				// Ya si eso revisamos que el email tenga lo propio de una dirección
 
 				User user = new User(username, password, email, userRole, userState, null);
@@ -82,13 +92,35 @@ public class UserLogic {
 				for (User u : usersList) {
 					if (u.getUsername().equals(username)) {
 						u.setPreferencesList(userPreferences);
-						//System.out.println(u.toString());
 					}
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void writeUserPreferences(User user) {
+		File usersPreferences = new File("txtFiles/userSettings.txt");
+
+		if (!(usersPreferences.exists())) {
+			System.err.println("No existe usersSettings.txt, por lo que no se pueden guardar las preferencias");
+			return;
+		}
+
+		try (FileWriter fw = new FileWriter(usersPreferences);
+			BufferedWriter bw = new BufferedWriter(fw)) {
+			
+			for (User u : usersList) {
+				bw.write(u.getUsername());
+				for (String category : u.getPreferencesList()) {
+					bw.write(";" + category);
+				}
+				bw.newLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}
 
 	public static boolean checkState(int givenState) {

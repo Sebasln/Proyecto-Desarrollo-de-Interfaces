@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +23,8 @@ public class LoginWindow extends JFrame {
 
 	public LoginWindow() {
 		initialize();
+		ImageIcon icono = new ImageIcon("images/logoNoticias.png");
+		this.setIconImage(icono.getImage());
 		this.setVisible(true);
 	}
 
@@ -105,10 +109,16 @@ public class LoginWindow extends JFrame {
 					System.out.println(loadedUser + ", " + loadedPassword);
 
 					if (loadedUser.equals(username) && loadedPassword.equals(password)) {
-						System.out.println("Usuario autenticado");
-
-						//new MainWindow();
-						LoginWindow.this.dispose();					
+						if (u.getRole().equalsIgnoreCase("ADMIN")) {
+							new AdminWindow(u); 
+						} else {
+							if (u.getPreferencesList() == null || u.getPreferencesList().isEmpty()) {
+								new UserConfigWindow(u);
+							} else {
+								new MainWindow(u); 
+							}
+						}
+						LoginWindow.this.dispose();
 						return;
 					}
 				}

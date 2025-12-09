@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
-
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import java.awt.Image;
 
 import fileLogic.UserLogic;
 
@@ -19,7 +21,16 @@ public class ProgressBarWindow extends JWindow{
 		this.add(progressBar);
 		this.setSize(300, 50);
 		this.setLocationRelativeTo(null);
+		ImageIcon icono = new ImageIcon("images/logoNoticias.png");
+		this.setIconImage(icono.getImage());
 		this.setVisible(true);
+
+	ImageIcon imagenOriginal = new ImageIcon("images/logoNoticias.png");
+	Image imagenEscalada = imagenOriginal.getImage().getScaledInstance(400, 300, Image.SCALE_SMOOTH);
+	ImageIcon imagenFinal = new ImageIcon(imagenEscalada);
+	JLabel fondo = new JLabel(imagenFinal);
+	fondo.setBounds(0, 0, 400, 300);
+	this.add(fondo);
 
 		Thread loadThread = new Thread(new Runnable() {
 			@Override

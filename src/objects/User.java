@@ -5,26 +5,26 @@ import java.util.ArrayList;
 public class User {
 
 	String username, password, email, role;
-	boolean state;
+	boolean isNew;
 	ArrayList<String> preferencesList = new ArrayList<>();
 	
-	public User(String username, String password, String email, String role, boolean state,
+	public User(String username, String password, String email, String role, boolean isNew,
 			ArrayList<String> preferencesList) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.role = role;
-		this.state = state;
+		this.isNew = isNew;
 		this.preferencesList = preferencesList;
 	}
-	public User(String username, String password, String email, String role, boolean state) {
+	public User(String username, String password, String email, String role, boolean isNew) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.role = role;
-		this.state = state;
+		this.isNew = isNew;
 	}
 	public String getUsername() {
 		return username;
@@ -50,11 +50,11 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	public boolean isState() {
-		return state;
+	public boolean isNew() {
+		return isNew;
 	}
-	public void setState(boolean state) {
-		this.state = state;
+	public void setNew(boolean isNew) {
+		this.isNew = isNew;
 	}
 	public ArrayList<String> getPreferencesList() {
 		return preferencesList;
@@ -65,6 +65,6 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", email=" + email + ", role=" + role
-				+ ", state=" + state + ", preferencesList=" + preferencesList + "]";
+				+ ", isNew=" + isNew + ", preferencesList=" + preferencesList + "]";
 	}
 }
