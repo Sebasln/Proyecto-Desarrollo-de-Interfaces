@@ -23,8 +23,10 @@ public class WebLogic {
 			String line;
 
 			while ((line = br.readLine()) != null) {
-				if (line.trim().isEmpty())
-					continue;
+				if (line.trim().isEmpty()){
+					System.out.println("urls.txt tiene campos faltantes, por lo que no se puede ejecutar el programa.");
+					return;
+				}
 
 				String[] newsFields = line.split(";", -1);
 				String category = checkNullity(newsFields[0], 0);
