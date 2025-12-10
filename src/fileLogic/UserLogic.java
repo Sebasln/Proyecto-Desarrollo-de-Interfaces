@@ -24,12 +24,8 @@ public class UserLogic {
 			System.err.println("No existe users.txt, por lo que no se pueden cargar los usuarios");
 			return;
 		}
-
-		FileReader fr = new FileReader(users);
-		BufferedReader br = new BufferedReader(fr);
-		String line;
-
-		try {
+		try (FileReader fr = new FileReader(users); BufferedReader br = new BufferedReader(fr);) {
+			String line;
 			while ((line = br.readLine()) != null) {
 				if (line.trim().isEmpty())
 					continue;
@@ -51,7 +47,7 @@ public class UserLogic {
 				boolean userState = checkState(stateInt);
 				// Ya si eso revisamos que el email tenga lo propio de una dirección
 
-				User user = new User(username, password, email, userRole, userState, null);
+				User user = new User(username, password, email, userRole, userState, new ArrayList<>());
 
 				usersList.add(user);
 
@@ -92,6 +88,9 @@ public class UserLogic {
 				for (User u : usersList) {
 					if (u.getUsername().equals(username)) {
 						u.setPreferencesList(userPreferences);
+						// Si tiene preferencias cargadas, ya no es un usuario 'nuevo' que necesite
+						// configuración
+						u.setNew(false);
 					}
 				}
 			}
@@ -108,9 +107,8 @@ public class UserLogic {
 			return;
 		}
 
-		try (FileWriter fw = new FileWriter(usersPreferences);
-			BufferedWriter bw = new BufferedWriter(fw)) {
-			
+		try (FileWriter fw = new FileWriter(usersPreferences); BufferedWriter bw = new BufferedWriter(fw)) {
+
 			for (User u : usersList) {
 				bw.write(u.getUsername());
 				for (String category : u.getPreferencesList()) {
@@ -120,7 +118,7 @@ public class UserLogic {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}	
+		}
 	}
 
 	public static boolean checkState(int givenState) {

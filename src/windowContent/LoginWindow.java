@@ -82,6 +82,7 @@ public class LoginWindow extends JFrame {
 		usernameWarningLabel.setVisible(false);
 		usernameWarningLabel.setBounds(124, 120, 158, 14);
 		this.getContentPane().add(usernameWarningLabel);
+		
 
 		JLabel autenticationFailedLabel = new JLabel("Usuario o contraseña incorrectos");
 		autenticationFailedLabel.setForeground(new Color(255, 32, 32));
@@ -109,10 +110,10 @@ public class LoginWindow extends JFrame {
 					System.out.println(loadedUser + ", " + loadedPassword);
 
 					if (loadedUser.equals(username) && loadedPassword.equals(password)) {
-						if (u.getRole().equalsIgnoreCase("ADMIN")) {
+						if (u.getRole().toLowerCase().equals("admin")) {
 							new AdminWindow(u); 
 						} else {
-							if (u.getPreferencesList() == null || u.getPreferencesList().isEmpty()) {
+							if (u.isNew() == true) {
 								new UserConfigWindow(u);
 							} else {
 								new MainWindow(u); 
@@ -140,10 +141,6 @@ public class LoginWindow extends JFrame {
 			usWarn.setVisible(false);
 			passWarn.setVisible(false);
 			aFailed.setVisible(false);
-
 		}
-		
-		
-		
 	}
 }

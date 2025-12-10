@@ -10,27 +10,30 @@ import javax.swing.JLabel;
 import java.awt.Image;
 
 import fileLogic.UserLogic;
+import fileLogic.WebLogic;
 
 public class ProgressBarWindow extends JWindow{
 
 	public ProgressBarWindow() {
-		JProgressBar progressBar = new JProgressBar();
+		this.setLayout(null);
 
+		ImageIcon imagenOriginal = new ImageIcon("images/logoNoticias.png");
+		Image imagenEscalada = imagenOriginal.getImage().getScaledInstance(400, 300, Image.SCALE_SMOOTH);
+		ImageIcon imagenFinal = new ImageIcon(imagenEscalada);
+		JLabel fondo = new JLabel(imagenFinal);
+		fondo.setBounds(0, 0, 400, 300);
+		this.add(fondo);
+
+		JProgressBar progressBar = new JProgressBar();
 		progressBar.setIndeterminate(false);
 		progressBar.setStringPainted(true);
-		this.add(progressBar);
-		this.setSize(300, 50);
-		this.setLocationRelativeTo(null);
-		ImageIcon icono = new ImageIcon("images/logoNoticias.png");
-		this.setIconImage(icono.getImage());
-		this.setVisible(true);
+		progressBar.setBounds(50, 250, 300, 30); 
+		this.add(progressBar); 
 
-	ImageIcon imagenOriginal = new ImageIcon("images/logoNoticias.png");
-	Image imagenEscalada = imagenOriginal.getImage().getScaledInstance(400, 300, Image.SCALE_SMOOTH);
-	ImageIcon imagenFinal = new ImageIcon(imagenEscalada);
-	JLabel fondo = new JLabel(imagenFinal);
-	fondo.setBounds(0, 0, 400, 300);
-	this.add(fondo);
+		this.setSize(400, 300);
+		this.setLocationRelativeTo(null);
+		this.setIconImage(imagenOriginal.getImage());
+		this.setVisible(true);
 
 		Thread loadThread = new Thread(new Runnable() {
 			@Override
@@ -47,6 +50,7 @@ public class ProgressBarWindow extends JWindow{
 						try {
 							UserLogic.readUsers();
 							UserLogic.readUserPreferences();
+							WebLogic.setNewsProperties();
 							continue;
 						} catch (FileNotFoundException e) {
 							e.printStackTrace();

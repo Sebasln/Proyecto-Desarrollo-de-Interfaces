@@ -1,14 +1,18 @@
 package objects;
 
 public class NewsContent {
-	String category, source, headline, date;
+	String category, url1, selector1, url2, selector2, url3, selector3;
 
-	public NewsContent(String category, String source, String headline, String date) {
+	public NewsContent(String category, String url1, String selector1, String url2, String selector2, String url3,
+			String selector3) {
 		super();
 		this.category = category;
-		this.source = source;
-		this.headline = headline;
-		this.date = date;
+		this.url1 = url1;
+		this.selector1 = selector1;
+		this.url2 = url2;
+		this.selector2 = selector2;
+		this.url3 = url3;
+		this.selector3 = selector3;
 	}
 
 	public String getCategory() {
@@ -19,29 +23,57 @@ public class NewsContent {
 		this.category = category;
 	}
 
-	public String getSource() {
-		return source;
+	public String getUrl1() {
+		return url1;
 	}
 
-	public void setSource(String source) {
-		this.source = source;
+	public void setUrl1(String url1) {
+		this.url1 = url1;
 	}
 
-	public String getHeadline() {
-		return headline;
+	public String getSelector1() {
+		return selector1;
 	}
 
-	public void setHeadline(String headline) {
-		this.headline = headline;
+	public void setSelector1(String selector1) {
+		this.selector1 = selector1;
 	}
 
-	public String getDate() {
-		return date;
+	public String getUrl2() {
+		return url2;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setUrl2(String url2) {
+		this.url2 = url2;
 	}
-	
-	
+
+	public String getSelector2() {
+		return selector2;
+	}
+
+	public void setSelector2(String selector2) {
+		this.selector2 = selector2;
+	}
+
+	public String getUrl3() {
+		return url3;
+	}
+
+	public void setUrl3(String url3) {
+		this.url3 = url3;
+	}
+
+	public String getSelector3() {
+		return selector3;
+	}
+
+	public void setSelector3(String selector3) {
+		this.selector3 = selector3;
+	}
+
+	@Override
+	public String toString() {
+		return "NewsContent [category=" + category + ", url1=" + url1 + ", selector1=" + selector1 + ", url2=" + url2
+				+ ", selector2=" + selector2 + ", url3=" + url3 + ", selector3=" + selector3 + "]";
+	}
 }

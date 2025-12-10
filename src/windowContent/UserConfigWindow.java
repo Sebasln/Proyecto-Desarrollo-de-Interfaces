@@ -100,27 +100,29 @@ public class UserConfigWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(economyCBox.isSelected()) {
-                    user.getPreferencesList().add("economy");
+                    user.getPreferencesList().add("ECONOMIA");
                 }
                 if(sportsCBox.isSelected()) {
-                    user.getPreferencesList().add("sports");
+                    user.getPreferencesList().add("DEPORTES");
                 }
                 if(nationalCBox.isSelected()) {
-                    user.getPreferencesList().add("national");
+                    user.getPreferencesList().add("NACIONAL");
                 }
                 if(internationalCBox.isSelected()) {
-                    user.getPreferencesList().add("international");
+                    user.getPreferencesList().add("INTERNACIONAL");
                 }
                 if(videogamesCBox.isSelected()) {
-                    user.getPreferencesList().add("videogames");
+                    user.getPreferencesList().add("VIDEOJUEGOS");
                 }
                 if(techCBox.isSelected()) {
-                    user.getPreferencesList().add("tech");
+                    user.getPreferencesList().add("TECNOLOGIA");
                 }
+
                 if(user.getPreferencesList().isEmpty()) {
                     emptinessWarningLabel.setVisible(true); 
                     return;
                 }
+
                 user.setNew(false);
                 UserLogic.writeUserPreferences(user);
                 emptinessWarningLabel.setVisible(false); 

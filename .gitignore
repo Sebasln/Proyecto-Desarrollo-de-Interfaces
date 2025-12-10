@@ -4,3 +4,5 @@ jdk/
 jdk.zip
 setup_jdk.ps1
 run.bat
+download_jdk.ps1
+jdk-21/
