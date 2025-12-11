@@ -28,12 +28,11 @@ public class EmailLogic {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", port);
         
-        // Timeouts para evitar cuelgues y SSL activado
-        props.put("mail.smtp.connectiontimeout", "5000"); // 5 segundos max para conectar
-        props.put("mail.smtp.timeout", "5000"); // 5 segundos max respuesta
+        props.put("mail.smtp.connectiontimeout", "5000"); 
+        props.put("mail.smtp.timeout", "5000"); 
         props.put("mail.smtp.writechrometimeout", "5000");
-        props.put("mail.smtp.ssl.enable", "true"); // OBLIGATORIO para puerto 465
-        props.put("mail.smtp.ssl.trust", "*"); // Confiar en todos los certificados (Fix PKIX error)
+        props.put("mail.smtp.ssl.enable", "true"); 
+        props.put("mail.smtp.ssl.trust", "*");
 
         Authenticator auth = new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -59,9 +58,7 @@ public class EmailLogic {
             Transport.send(msg);
             System.out.println("¡EMAIL ENVIADO!");
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error enviando email: " + e.getMessage());
-            // Podríamos lanzar una RuntimeException para que la UI se entere
+            System.err.println("Ha ocurrido este problema: " + e.getMessage());
             throw new RuntimeException("Error enviando email: " + e.getMessage());
         }
     }

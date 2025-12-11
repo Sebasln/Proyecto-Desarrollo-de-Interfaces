@@ -1,7 +1,7 @@
 SECTION;URL;
 ECONOMIA;https://www.expansion.com/;h2;https://cincodias.elpais.com/;h2.c_t;https://www.eleconomista.es/;h2
 DEPORTES;https://www.marca.com/;h1;https://as.com/;h1;https://www.diariogol.com/;h1
-NACIONAL;https://www.elmundo.es/;article.ue-c-cover-content h2;https://www.larazon.es/;h2;https://elpais.com/;h2.c_t
+NACIONAL;https://www.elmundo.es/;h2;https://www.larazon.es/;h2;https://elpais.com/;h2.c_t
 TECNOLOGIA;https://es.wired.com/;h2;https://www.silicon.es/;h2;https://revistabyte.es/;h2
 VIDEOJUEGOS;https://vandal.elespanol.com/;h2 a;https://www.hobbyconsolas.com/;article h2;https://as.com/meristation/;h2
 INTERNACIONAL;https://www.20minutos.es/;h2;https://www.bbc.com/mundo;h2;https://www.europapress.es/;h2

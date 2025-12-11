@@ -55,7 +55,7 @@ public class WebLogic {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("Ha ocurrido este problema: " + e.getMessage());
 		}
 	}
 
@@ -73,7 +73,7 @@ public class WebLogic {
         bw.newLine();
         
     } catch (java.io.IOException e) {
-        e.printStackTrace();
+        System.err.println("Ha ocurrido este problema: " + e.getMessage());
     }
 }
 

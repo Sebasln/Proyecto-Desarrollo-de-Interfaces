@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -52,24 +53,23 @@ public class AdminWindow extends JFrame {
 
 	private void initialize() {
 		this.setBounds(100, 100, 800, 600);
-		this.setLocationRelativeTo(null); // Centrar ventana
-		this.setResizable(false); // Requisito: No redimensionable
+		this.setLocationRelativeTo(null);
+		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		// Confirmación al cerrar
+		
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				if (javax.swing.JOptionPane.showConfirmDialog(null, 
+				if (JOptionPane.showConfirmDialog(null, 
 					"¿Estás seguro de que quieres salir?", "Cerrar Aplicación", 
-					javax.swing.JOptionPane.YES_NO_OPTION,
-					javax.swing.JOptionPane.QUESTION_MESSAGE) == javax.swing.JOptionPane.YES_OPTION){
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
 					System.exit(0);
 				}
 			}
 		});
 		
 
-		// --- MENU BAR (Ayuda) ---
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
 		
@@ -79,9 +79,9 @@ public class AdminWindow extends JFrame {
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
 		mntmAcercaDe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				javax.swing.JOptionPane.showMessageDialog(null, 
+				JOptionPane.showMessageDialog(null, 
 						"Proyecto DAM 25/26\nDesarrollado por: Sebastián Silva\nVersión 25.12.11", 
-						"Acerca de", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+						"Acerca de", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		mnAyuda.add(mntmAcercaDe);
@@ -93,7 +93,7 @@ public class AdminWindow extends JFrame {
 		menuPane.setLayout(null);
 		menuPane.setOpaque(true);
 		menuPane.setBackground(new Color(40, 40, 40));
-		menuPane.setBounds(0, 0, 784, 540); // Reducido para dejar espacio a la Menu Bar
+		menuPane.setBounds(0, 0, 784, 540); 
 		this.getContentPane().add(menuPane);
 
 		JLabel headerAdminLbl = new JLabel("Menú de admin");
@@ -133,7 +133,7 @@ public class AdminWindow extends JFrame {
 		goToEmailBtn.setFont(new Font("Tahoma", Font.BOLD, 14));
 		goToEmailBtn.setForeground(new Color(0, 0, 0));
 		goToEmailBtn.setBackground(new Color(255, 255, 255));
-		goToEmailBtn.setBounds(startX + btnWidth / 2 + gap, 320, btnWidth, btnHeight); // Centrado abajo
+		goToEmailBtn.setBounds(startX + btnWidth / 2 + gap, 320, btnWidth, btnHeight); 
 		menuPane.add(goToEmailBtn);
 
 		createUserPane = new JLayeredPane();
@@ -261,7 +261,6 @@ public class AdminWindow extends JFrame {
 			}
 		});
 
-		// --- EMAIL PANE ---
 		emailPane = new JLayeredPane();
 		emailPane.setLayout(null);
 		emailPane.setOpaque(true);
@@ -283,7 +282,7 @@ public class AdminWindow extends JFrame {
 		selectUserLbl.setBounds(50, 100, 200, 20);
 		emailPane.add(selectUserLbl);
 
-		javax.swing.JComboBox<String> usersComboBox = new javax.swing.JComboBox<>();
+		JComboBox<String> usersComboBox = new JComboBox<>();
 		usersComboBox.setBounds(250, 100, 300, 25);
 		emailPane.add(usersComboBox);
 
@@ -316,9 +315,9 @@ public class AdminWindow extends JFrame {
 				createUserPane.setVisible(false);
 				deleteUserPane.setVisible(false);
 				emailPane.setVisible(true);
-				statusLbl.setText(""); // Limpiar estado al entrar
+				statusLbl.setText(""); 
 				
-				// Rellenar combobox
+				
 				usersComboBox.removeAllItems();
 				for (User u : UserLogic.usersList) {
 					usersComboBox.addItem(u.getEmail());
@@ -344,7 +343,7 @@ public class AdminWindow extends JFrame {
 					return;
 				}
 				
-				// Buscar objeto User
+				
 				User foundUser = null;
 				for (User u : UserLogic.usersList) {
 					if (u.getEmail().equals(selectedEmail)) {
@@ -352,38 +351,36 @@ public class AdminWindow extends JFrame {
 						break;
 					}
 				}
-				final User targetUser = foundUser; // Final para el thread
+				final User targetUser = foundUser; 
 				
 				if (targetUser == null) return;
 
-				// Feedback visual
+				
 				sendEmailBtn.setEnabled(false);
 				statusLbl.setText("Enviando mensaje, espere por favor...");
 				
-				// Ejecutar en hilo separado para no congelar la UI
+				
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
 						try {
-							// Obtener noticias
+							
 							ArrayList<objects.NewsItem> news = programLogic.WebReader.getNews(targetUser.getPreferencesList(), false);
 							
-							// Formatear (Texto Plano)
+							
 							String subject = "NOTICIAS DAM";
 							StringBuilder body = new StringBuilder();
-							// • FECHA/HORA
-							body.append("• " + new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm").format(new java.util.Date()) + "\n");
+							
+							body.append(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm").format(new java.util.Date()) + "\n");
 							body.append("--------------------------------------------------\n\n");
 							
 							String lastCat = "";
 							for (objects.NewsItem item : news) {
 								if (!item.getCategory().equals(lastCat)) {
-									// • CATEGORÍA:
-									body.append("\n• " + item.getCategory() + ":\n");
+									body.append("\n" + item.getCategory() + ":\n");
 									lastCat = item.getCategory();
 								}
-								// ✓ TITULAR
-								body.append("✓ " + item.getHeadline());
+								body.append(item.getHeadline());
 								if (item.getUrl() != null && !item.getUrl().isEmpty()) {
 									body.append(" [" + item.getUrl() + "]");
 								}
@@ -445,7 +442,7 @@ public class AdminWindow extends JFrame {
 				
 				if (username.contains(";") || password.contains(";") || email.contains(";")) {
 					JOptionPane.showMessageDialog(null, "Ese caracter (;) destruirá el formato del .txt...\nNo lo pongas porfa.", "Error de formato", JOptionPane.ERROR_MESSAGE);
-					return; //gracias Miguel por darte cuenta
+					return; 
 				}
 				
 				if (UserLogic.usersList.size() >= 10) {
@@ -488,7 +485,7 @@ public class AdminWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				// Creamos un usuario temporal para el test con TODAS las categorías
+				
 				User adminTestUser = new User(user.getUsername(), user.getPassword(), user.getEmail(), "ADMIN", false);
 				ArrayList<String> allCats = new ArrayList<>();
 				allCats.add("ECONOMIA");

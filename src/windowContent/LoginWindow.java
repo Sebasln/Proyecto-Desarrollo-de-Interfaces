@@ -25,7 +25,7 @@ import objects.User;
 
 public class LoginWindow extends JFrame {
 	private JTextField usernameTField;
-	private JPasswordField passwordTField; // Cambiado a JPasswordField
+	private JPasswordField passwordTField;
 
 	public LoginWindow() {
 		initialize();
@@ -35,7 +35,6 @@ public class LoginWindow extends JFrame {
 	}
 
 	private void initialize() {
-		// --- MENU BAR (Ayuda) ---
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
 		
@@ -53,17 +52,17 @@ public class LoginWindow extends JFrame {
 		mnAyuda.add(mntmAcercaDe);
 
 		this.getContentPane().setBackground(new Color(40, 40, 40));
-		this.setBounds(100, 100, 450, 350); // Ventana más pequeña
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Cambiado a DO_NOTHING
-		this.setResizable(false); // Requisito: No redimensionable
-		// Confirmación al cerrar
+		this.setBounds(100, 100, 450, 350); 
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
+		this.setResizable(false); 
+		
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				if (javax.swing.JOptionPane.showConfirmDialog(null, 
+				if (JOptionPane.showConfirmDialog(null, 
 					"¿Estás seguro de que quieres salir?", "Cerrar Aplicación", 
-					javax.swing.JOptionPane.YES_NO_OPTION,
-					javax.swing.JOptionPane.QUESTION_MESSAGE) == javax.swing.JOptionPane.YES_OPTION){
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
 					System.exit(0);
 				}
 			}
@@ -71,9 +70,9 @@ public class LoginWindow extends JFrame {
 		this.getContentPane().setLayout(null);
 		this.setLocationRelativeTo(null);
 
-		int centerX = 225; // Centro de la ventana (450 / 2)
-		int width = 200;   // Ancho unificado para labels y fields
-		int xPos = centerX - (width / 2); // Posición X centrada
+		int centerX = 225; 
+		int width = 200;   
+		int xPos = centerX - (width / 2);
 
 		JLabel headerLabel = new JLabel("Inicio de sesión");
 		headerLabel.setForeground(new Color(255, 255, 255));
@@ -101,13 +100,10 @@ public class LoginWindow extends JFrame {
 		passwordLabel.setBounds(xPos, 145, width, 14);
 		this.getContentPane().add(passwordLabel);
 
-		// Campo de contraseña usando JPasswordField
-		passwordTField = new JPasswordField();
-		passwordTField.setBounds(xPos, 170, width, 20);
 		this.getContentPane().add(passwordTField);
 		passwordTField.setColumns(10);
 		
-		// --- BOTÓN OJO PARA VER/OCULTAR CONTRASEÑA ---
+		
 		ImageIcon ojoAbiertoIcon = new ImageIcon("images/ojoAbierto.jpg");
 		Image imgAbierto = ojoAbiertoIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 		ImageIcon iconAbierto = new ImageIcon(imgAbierto);
@@ -116,8 +112,9 @@ public class LoginWindow extends JFrame {
 		Image imgCerrado = ojoCerradoIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 		ImageIcon iconCerrado = new ImageIcon(imgCerrado);
 		
+		
 		JToggleButton togglePasswordBtn = new JToggleButton();
-		// Lo ponemos justo a la derecha del campo de contraseña
+		
 		togglePasswordBtn.setBounds(xPos + width + 5, 169, 25, 22); 
 		togglePasswordBtn.setIcon(iconCerrado);
 		togglePasswordBtn.setToolTipText("Mostrar/Ocultar contraseña");
@@ -137,9 +134,9 @@ public class LoginWindow extends JFrame {
 		this.getContentPane().add(togglePasswordBtn);
 
 		JButton loginButton = new JButton("Iniciar sesión");
-		loginButton.setBounds(centerX - 56, 230, 112, 23); // Centrado
+		loginButton.setBounds(centerX - 56, 230, 112, 23); 
 		this.getContentPane().add(loginButton);
-		this.getRootPane().setDefaultButton(loginButton); //locura de linea para que al darle al enter intente iniciar sesión
+		this.getRootPane().setDefaultButton(loginButton);
 
 		JLabel passwordWarningLabel = new JLabel("Este campo es obligatorio");
 		passwordWarningLabel.setFont(new Font("Tahoma", Font.BOLD, 11));

@@ -1,7 +1,7 @@
 package windowContent;
 
 import java.io.FileNotFoundException;
-
+import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
@@ -43,19 +43,16 @@ public class ProgressBarWindow extends JWindow{
 					try {
 						Thread.sleep(50);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						System.err.println("Ha ocurrido este problema: " + e.getMessage());
 					}
 					
-					// 50ms * 100 = 5000ms = 5 segundos
-					
-					if (i == 80) { // Al 80% (aprox 4 segundos)
+					if (i == 80) { 
 						try {
 							UserLogic.readUsers();
 							UserLogic.readUserPreferences();
-							// Cargamos la configuración de URLs y selectores (ahora hardcodeada en ConfigLogic)
 							WebLogic.setNewsProperties();
 						} catch (FileNotFoundException e) {
-							javax.swing.JOptionPane.showMessageDialog(null, "Error crítico: Faltan archivos de sistema (users.txt o settings.txt).\nLa aplicación se cerrará.", "Error Fatal", javax.swing.JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Error crítico: Faltan archivos de sistema (users.txt o settings.txt).\nLa aplicación se cerrará.", "Error Fatal", JOptionPane.ERROR_MESSAGE);
 							System.exit(1); 
 						}
 					}

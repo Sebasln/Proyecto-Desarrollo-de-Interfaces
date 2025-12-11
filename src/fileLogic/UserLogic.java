@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import objects.User;
 
 public class UserLogic {
-	/* Aquí irán los métodos que traten con los archivos de texto */
 
 	static public ArrayList<User> usersList = new ArrayList<>();
 
@@ -30,7 +29,7 @@ public class UserLogic {
 				if (line.trim().isEmpty())
 					continue;
 
-				String[] userFields = line.split(";", -1); // -1 para mantener campos vacíos al final
+				String[] userFields = line.split(";", -1);
 				String username = checkNullity(userFields[0], 0);
 				String password = checkNullity(userFields[1], 1);
 				String email = checkNullity(userFields[2], 2);
@@ -45,16 +44,13 @@ public class UserLogic {
 					System.err.println("Error parsing state for user " + username + ", defaulting to 0/True");
 				}
 				boolean userState = checkState(stateInt);
-				// Ya si eso revisamos que el email tenga lo propio de una dirección
 
 				User user = new User(username, password, email, userRole, userState, new ArrayList<>());
 
 				usersList.add(user);
-
-				// System.out.println(user.toString());
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("Ha ocurrido este problema: " + e.getMessage());
 		}
 	}
 
@@ -102,7 +98,7 @@ public class UserLogic {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("Ha ocurrido este problema: " + e.getMessage());
 		}
 	}
 
@@ -124,7 +120,7 @@ public class UserLogic {
 				bw.newLine();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("Ha ocurrido este problema: " + e.getMessage());
 		}
 	}
 
@@ -148,7 +144,7 @@ public class UserLogic {
 			bw.newLine();
 			System.out.println("Usuario guardado en users.txt: " + username);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("Ha ocurrido este problema: " + e.getMessage());
 		}
 	}
 	
@@ -180,7 +176,7 @@ public class UserLogic {
 				bw.newLine();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("Ha ocurrido este problema: " + e.getMessage());
 		}
 	}
 

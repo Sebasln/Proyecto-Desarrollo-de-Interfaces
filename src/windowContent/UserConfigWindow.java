@@ -16,6 +16,7 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingConstants;
 import objects.User;
 import fileLogic.UserLogic;
+import javax.swing.JOptionPane;
 
 public class UserConfigWindow extends JFrame {
 
@@ -32,7 +33,6 @@ public class UserConfigWindow extends JFrame {
     }
 
     private void initialize() {
-    	// --- MENU BAR (Ayuda) ---
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
 		
@@ -42,9 +42,9 @@ public class UserConfigWindow extends JFrame {
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
 		mntmAcercaDe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				javax.swing.JOptionPane.showMessageDialog(null, 
-						"Proyecto DAM 25/26\nDesarrollado por: Sebastián Silva\nVersión 25.12.11", 
-						"Acerca de", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, 
+						"Desarrollador: Sebastián Silva\nVersión 25.12.11.sangre.lágrimas", 
+						"Acerca de", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		mnAyuda.add(mntmAcercaDe);
@@ -52,20 +52,20 @@ public class UserConfigWindow extends JFrame {
         this.getContentPane().setBackground(new Color(40, 40, 40));
         this.setBounds(100, 100, 450, 300);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		// Confirmación al cerrar
-		// The original addWindowListener block is moved below
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
         this.getContentPane().setLayout(null);
         this.setLocationRelativeTo(null);
-		this.setResizable(false); // Requisito: No redimensionable
+		this.setResizable(false); 
 		
-		// Confirmación al cerrar
+		
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				if (javax.swing.JOptionPane.showConfirmDialog(null, 
+				if (JOptionPane.showConfirmDialog(null, 
 					"¿Estás seguro de que quieres salir?", "Cerrar Aplicación", 
-					javax.swing.JOptionPane.YES_NO_OPTION,
-					javax.swing.JOptionPane.QUESTION_MESSAGE) == javax.swing.JOptionPane.YES_OPTION){
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
 					System.exit(0);
 				}
 			}

@@ -30,8 +30,8 @@ import java.text.SimpleDateFormat;
 public class MainWindow extends JFrame {
 
 	private User user;
-	private String loadTime; // Para guardar la hora de carga
-	private ArrayList<String> currentHeadlines = new ArrayList<>(); // Para guardar los titulares actuales
+	private String loadTime; 
+	private ArrayList<String> currentHeadlines = new ArrayList<>();
 
 	public MainWindow(User user) {
 		this.user = user;
@@ -42,7 +42,6 @@ public class MainWindow extends JFrame {
 	}
 
 	private void initialize() {
-		// --- MENU BAR (Ayuda) ---
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
 		
@@ -52,9 +51,9 @@ public class MainWindow extends JFrame {
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
 		mntmAcercaDe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				javax.swing.JOptionPane.showMessageDialog(null, 
+				JOptionPane.showMessageDialog(null, 
 						"Proyecto DAM 25/26\nDesarrollado por: Sebastián Silva\nVersión 25.12.11", 
-						"Acerca de", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+						"Acerca de", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		mnAyuda.add(mntmAcercaDe);
@@ -63,21 +62,20 @@ public class MainWindow extends JFrame {
 		this.setBounds(100, 50, 900, 900);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
-		// Declaramos el botón aquí para poder usarlo en el hilo
+		
 		JButton btnGuardar = new JButton("Guardar consulta");
 		btnGuardar.setBounds(380, 800, 140, 23);
-		btnGuardar.setEnabled(false); // Deshabilitado al inicio
 		this.getContentPane().add(btnGuardar);
-		this.setLocationRelativeTo(null); // Centrar en pantalla
-		this.setResizable(false); // Requisito: No redimensionable
-		// Confirmación al cerrar
+		this.setLocationRelativeTo(null); 
+		this.setResizable(false); 
+		
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				if (javax.swing.JOptionPane.showConfirmDialog(null, 
+				if (JOptionPane.showConfirmDialog(null, 
 					"¿Estás seguro de que quieres salir?", "Cerrar Aplicación", 
-					javax.swing.JOptionPane.YES_NO_OPTION,
-					javax.swing.JOptionPane.QUESTION_MESSAGE) == javax.swing.JOptionPane.YES_OPTION){
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
 					System.exit(0);
 				}
 			}
@@ -211,14 +209,11 @@ public class MainWindow extends JFrame {
 		}
 
 		Thread newsThread = new Thread(() -> {
-			// Capturamos la hora EXACTA antes de empezar a descargar
+			
 			loadTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 			
 			boolean isAdmin = user.getRole().equalsIgnoreCase("ADMIN");
 			ArrayList<NewsItem> news = WebReader.getNews(user.getPreferencesList(), isAdmin);
-			System.out.println("Se han cargado " + news.size() + " noticias.");
-			
-			// Guardamos los titulares en memoria para el botón guardar
 			for (NewsItem item : news) {
 				currentHeadlines.add(item.getCategory() + ": " + item.getHeadline());
 			}
@@ -236,13 +231,13 @@ public class MainWindow extends JFrame {
 					labels[0].setText("No se encontraron noticias para tus intereses.");
 				}
 				
-				// Habilitamos el botón cuando ha terminado de cargar
+				
 				btnGuardar.setEnabled(true);
 			});
 		});
 		newsThread.start();
 		
-		// Lógica del botón guardar (ya añadido arriba)
+		
 		btnGuardar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

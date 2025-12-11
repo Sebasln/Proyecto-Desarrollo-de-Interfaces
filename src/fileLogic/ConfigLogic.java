@@ -13,7 +13,6 @@ public class ConfigLogic {
     private static Map<String, String> configData = new HashMap<>();
 
     static {
-        // Defaults
         configData.put("SMTP_HOST", "smtp.gmail.com");
         configData.put("SMTP_PORT", "465");
         
@@ -31,21 +30,18 @@ public class ConfigLogic {
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
-                // Ignorar líneas vacías o secciones
+                line = line.trim();
                 if (line.isEmpty() || line.startsWith("SECTION;")) continue;
 
-                // Parsear clave;valor;
                 String[] parts = line.split(";", -1);
                 if (parts.length >= 2) {
                     String key = parts[0].trim();
                     String val = parts[1].trim();
                     
-                    // Limpiar posible punto final en TIME (error usuario)
                     if (key.equals("TIME") && val.endsWith(".")) {
                         val = val.substring(0, val.length() - 1);
                     }
 
-                    // Mapear claves del fichero a claves internas
                     switch (key) {
                         case "FROM_EMAIL_ADDRESS":
                             configData.put("SMTP_USER", val);
@@ -60,7 +56,7 @@ public class ConfigLogic {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Ha ocurrido este problema: " + e.getMessage());
         }
     }
   
