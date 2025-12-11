@@ -31,7 +31,19 @@ public class UserConfigWindow extends JFrame {
     private void initialize() {
         this.getContentPane().setBackground(new Color(40, 40, 40));
         this.setBounds(100, 100, 450, 300);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		// Confirmación al cerrar
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				if (javax.swing.JOptionPane.showConfirmDialog(null, 
+					"¿Estás seguro de que quieres salir?", "Cerrar Aplicación", 
+					javax.swing.JOptionPane.YES_NO_OPTION,
+					javax.swing.JOptionPane.QUESTION_MESSAGE) == javax.swing.JOptionPane.YES_OPTION){
+					System.exit(0);
+				}
+			}
+		});
         this.getContentPane().setLayout(null);
         this.setLocationRelativeTo(null);
 

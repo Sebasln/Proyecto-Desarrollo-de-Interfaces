@@ -13,9 +13,9 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import javax.swing.ImageIcon;
-import objects.NewsContent;
+import objects.NewsItem;
 import objects.User;
-import fileLogic.WebLogic;
+import programLogic.WebReader;
 
 public class MainWindow extends JFrame {
 
@@ -32,7 +32,32 @@ public class MainWindow extends JFrame {
 	private void initialize() {
 		this.getContentPane().setBackground(new Color(40, 40, 40));
 		this.setBounds(200, 200, 900, 600);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		// Confirmación al cerrar
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				if (javax.swing.JOptionPane.showConfirmDialog(null, 
+					"¿Estás seguro de que quieres salir?", "Cerrar Aplicación", 
+					javax.swing.JOptionPane.YES_NO_OPTION,
+					javax.swing.JOptionPane.QUESTION_MESSAGE) == javax.swing.JOptionPane.YES_OPTION){
+					System.exit(0);
+				}
+			}
+		});
+		
+		JButton btnAcercaDe = new JButton("Acerca de");
+		btnAcercaDe.setBounds(750, 527, 100, 23);
+		btnAcercaDe.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				javax.swing.JOptionPane.showMessageDialog(null, 
+						"Proyecto DAM 25/26\nDesarrollado por: Sebastián Silva\nVersión 25.12.11", 
+						"Acerca de", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		this.getContentPane().add(btnAcercaDe);
+
 		this.getContentPane().setLayout(null);
 		this.setLocationRelativeTo(null);
 		
@@ -43,7 +68,7 @@ public class MainWindow extends JFrame {
 		mainLabel.setBounds(10, 11, 864, 77);
 		this.getContentPane().add(mainLabel);
 		
-		JLabel label1 = new JLabel("Cargando noticia...");
+		JLabel label1 = new JLabel("Cargando noticias...");
 		label1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		label1.setForeground(Color.WHITE);
 		label1.setBounds(50, 100, 380, 26);
@@ -151,8 +176,35 @@ public class MainWindow extends JFrame {
 		label18.setBounds(470, 460, 380, 26);
 		this.getContentPane().add(label18);
 
-		JLabel[] labels = {label1, label10, label2, label11, label3, label12, label4, label13, label5, label14, label6, label15, label7, label16, label8, label17, label9, label18};
+		JLabel[] labels = {label1, label10, label2, label11, label3, label12, label4, label13, label5, label14,
+				           label6, label15, label7, label16, label8, label17, label9, label18};
 
+		for(JLabel lbl : labels) {
+			lbl.setSize(380, 42); 
+			lbl.setVerticalAlignment(SwingConstants.TOP); 
+		}
+
+		Thread newsThread = new Thread(() -> {
+			boolean isAdmin = user.getRole().equalsIgnoreCase("ADMIN");
+			ArrayList<NewsItem> news = WebReader.getNews(user.getPreferencesList(), isAdmin);
+			System.out.println("DEBUG: Se han cargado " + news.size() + " noticias.");
+			
+			SwingUtilities.invokeLater(() -> {
+				for (int i = 0; i < news.size(); i++) {
+					if (i >= labels.length) break;
+					
+					NewsItem content = news.get(i);
+					String displayText = "<html>" + content.getCategory() + ": " + content.getHeadline() + "</html>";
+					labels[i].setText(displayText);
+				}
+				
+				if (news.isEmpty()) {
+					labels[0].setText("No se encontraron noticias para tus intereses.");
+				}
+			});
+		});
+		newsThread.start();
+		
 		JButton btnNewButton = new JButton("Volver al login");
 		btnNewButton.setBounds(10, 527, 132, 23);
 		btnNewButton.addActionListener(new ActionListener() {
@@ -163,5 +215,18 @@ public class MainWindow extends JFrame {
 			}
 		});
 		this.getContentPane().add(btnNewButton);
+
+		if (user.getRole().equalsIgnoreCase("ADMIN")) {
+			JButton btnBackAdmin = new JButton("Volver a Admin");
+			btnBackAdmin.setBounds(150, 527, 132, 23); 
+			btnBackAdmin.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					new AdminWindow(user);
+					dispose();
+				}
+			});
+			this.getContentPane().add(btnBackAdmin);
+		}
 	}
-}
+}		

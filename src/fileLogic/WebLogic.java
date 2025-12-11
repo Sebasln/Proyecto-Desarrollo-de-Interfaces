@@ -12,33 +12,52 @@ public class WebLogic {
 	public static ArrayList<NewsContent> newsList = new ArrayList<>();
 
 	public static void setNewsProperties() {
-		File urls = new File("txtFiles/urls.txt");
+		File urls = new File("txtFiles/settings.txt");
 
 		if (!(urls.exists())) {
-			System.out.println("No se pueden buscar noticias porque no existe urls.txt");
+			System.out.println("No se pueden buscar noticias porque no existe settings.txt");
 			return;
 		}
 
 		try (FileReader fr = new FileReader(urls); BufferedReader br = new BufferedReader(fr);) {
 			String line;
+			boolean isUrlSection = false;
 
 			while ((line = br.readLine()) != null) {
-				if (line.trim().isEmpty()){
-					System.out.println("urls.txt tiene campos faltantes, por lo que no se puede ejecutar el programa.");
-					return;
+				if (line.trim().isEmpty()) {
+					continue;
 				}
 
-				String[] newsFields = line.split(";", -1);
-				String category = checkNullity(newsFields[0], 0);
-				String url1 = checkNullity(newsFields[1], 1);
-				String selector1 = checkNullity(newsFields[2], 2);
-				String url2 = checkNullity(newsFields[3], 3);
-				String selector2 = checkNullity(newsFields[4], 4);
-				String url3 = checkNullity(newsFields[5], 5);
-				String selector3 = checkNullity(newsFields[6], 6);
+				if (line.startsWith("SECTION;")) {
+					if (line.contains("URL")) {
+						isUrlSection = true;
+					} else {
+						isUrlSection = false;
+					}
+					continue;
+				}
 
-				NewsContent newsCategory = new NewsContent(category, url1, selector1, url2, selector2, url3, selector3);
-				newsList.add(newsCategory);
+				if (isUrlSection) {
+					String[] newsFields = line.split(";", -1);
+					
+					if (newsFields.length < 7) {
+						System.out.println("Linea mal formada en settings.txt: " + line);
+						continue;
+					}
+
+					String category = checkNullity(newsFields[0], 0);
+					String url1 = checkNullity(newsFields[1], 1);
+					String selector1 = checkNullity(newsFields[2], 2);
+					String url2 = checkNullity(newsFields[3], 3);
+					String selector2 = checkNullity(newsFields[4], 4);
+					String url3 = checkNullity(newsFields[5], 5);
+					String selector3 = checkNullity(newsFields[6], 6);
+
+					if (category != null) {
+						NewsContent newsCategory = new NewsContent(category, url1, selector1, url2, selector2, url3, selector3);
+						newsList.add(newsCategory);
+					}
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -47,7 +66,7 @@ public class WebLogic {
 
 	public static String checkNullity(String field, int position) {
 		if (field.equals("") || field == null) {
-			System.out.println("urls.txt tiene campos faltantes, por lo que no se puede ejecutar el programa.");
+			System.out.println("settings.txt tiene campos faltantes, por lo que no se puede ejecutar el programa.");
 			return null;
 		}
 		return field;

@@ -50,9 +50,11 @@ public class ProgressBarWindow extends JWindow{
 						try {
 							UserLogic.readUsers();
 							UserLogic.readUserPreferences();
+							// Cargamos la configuración de URLs y selectores
 							WebLogic.setNewsProperties();
 							continue;
 						} catch (FileNotFoundException e) {
+							
 							e.printStackTrace();
 						}
 					}

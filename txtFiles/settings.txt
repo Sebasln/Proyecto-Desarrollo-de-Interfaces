@@ -1,6 +1,15 @@
+SECTION;URL;
 ECONOMIA;https://www.expansion.com/;article.ue-c-cover-content h2;https://cincodias.elpais.com/;h2.c_t;https://www.eleconomista.es/;h1
 DEPORTES;https://www.marca.com/;h1;https://as.com/;h1;https://www.diariogol.com/;h1
 NACIONAL;https://www.elmundo.es/;article.ue-c-cover-content h2;https://www.larazon.es/;h2.card__headline;https://elpais.com/;h2.c_t
 TECNOLOGIA;https://es.wired.com/;h2.SummaryItemHedBase-hnYOxl;https://www.silicon.es/;h2.entry-title;https://revistabyte.es/;h2.ultp-block-title
 VIDEOJUEGOS;https://vandal.elespanol.com/;h2 a;https://www.hobbyconsolas.com/;article h2;https://as.com/meristation/;h2.s_t
-INTERNACIONAL;https://mondiplo.com/;h1;https://www.bbc.com/mundo;h2;https://www.nytimes.com/es/;h3
+INTERNACIONAL;https://mondiplo.com/;h1;https://www.bbc.com/mundo;h2;https://www.nytimes.com/es/;h3 
+SECTION;FROM_EMAIL_CONFIGURATION;
+FROM_EMAIL_ADDRESS;sebastian.silva1.dosa@gmail.com;
+FROM_EMAIL_PASSWORD;scwi osdz jpta kzeq;
+SECTION;USERS_PREFERENCES;
+admin;
+sebas;ECONOMIA;NACIONAL;INTERNACIONAL;
+roberto;
+miguel;DEPORTES;VIDEOJUEGOS

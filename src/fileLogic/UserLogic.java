@@ -59,38 +59,45 @@ public class UserLogic {
 	}
 
 	public static void readUserPreferences() throws FileNotFoundException {
-		File usersPreferences = new File("txtFiles/userSettings.txt");
+		File usersPreferences = new File("txtFiles/settings.txt");
 
 		if (!(usersPreferences.exists())) {
-			System.err.println("No existe usersSettings.txt, por lo que no se pueden cargar los usuarios");
+			System.err.println("No existe settings.txt, por lo que no se pueden cargar las preferencias de los usuarios");
 			return;
 		}
 
-		FileReader fr = new FileReader(usersPreferences);
-		BufferedReader br = new BufferedReader(fr);
-		String line;
+		try (BufferedReader br = new BufferedReader(new FileReader(usersPreferences))) {
+			String line;
+			boolean inPreferences = false;
 
-		try {
 			while ((line = br.readLine()) != null) {
-				String[] categories = line.split(";");
-
-				if (categories.length < 1)
+				String trimmedLine = line.trim();
+				if (trimmedLine.isEmpty())
 					continue;
 
-				String username = categories[0];
-
-				ArrayList<String> userPreferences = new ArrayList<>();
-
-				for (int i = 1; i < categories.length; i++) {
-					userPreferences.add(categories[i]);
+				if (trimmedLine.startsWith("SECTION;")) {
+					inPreferences = trimmedLine.contains("USERS_PREFERENCES");
+					continue;
 				}
 
-				for (User u : usersList) {
-					if (u.getUsername().equals(username)) {
-						u.setPreferencesList(userPreferences);
-						// Si tiene preferencias cargadas, ya no es un usuario 'nuevo' que necesite
-						// configuración
-						u.setNew(false);
+				if (inPreferences) {
+					String[] parts = trimmedLine.split(";");
+					if (parts.length > 0) {
+						String username = parts[0];
+						ArrayList<String> userPreferences = new ArrayList<>();
+
+						for (int i = 1; i < parts.length; i++) {
+							if (!parts[i].trim().isEmpty()) {
+								userPreferences.add(parts[i].trim());
+							}
+						}
+
+						for (User u : usersList) {
+							if (u.getUsername().equals(username)) {
+								u.setPreferencesList(userPreferences);
+								u.setNew(false);
+							}
+						}
 					}
 				}
 			}
@@ -100,10 +107,10 @@ public class UserLogic {
 	}
 
 	public static void writeUserPreferences(User user) {
-		File usersPreferences = new File("txtFiles/userSettings.txt");
+		File usersPreferences = new File("txtFiles/settings.txt");
 
 		if (!(usersPreferences.exists())) {
-			System.err.println("No existe usersSettings.txt, por lo que no se pueden guardar las preferencias");
+			System.err.println("No existe settings.txt, por lo que no se pueden guardar las preferencias");
 			return;
 		}
 
@@ -119,6 +126,14 @@ public class UserLogic {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void deleteUser(String username) {
+		System.out.println("Usuario borrao");
+	}
+
+	public static void createNewUser(String username, String password) {
+		System.out.println("Usuario creao");
 	}
 
 	public static boolean checkState(int givenState) {
