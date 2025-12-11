@@ -128,12 +128,60 @@ public class UserLogic {
 		}
 	}
 
+
+	public static void createNewUser(String username, String password, String email, String role) {
+		for (User u : usersList) {
+			if (u.getUsername().equals(username)) {
+				System.err.println("El usuario ya existe.");
+				return;
+			}
+		}
+		
+		User newUser = new User(username, password, email, role, true);
+		usersList.add(newUser); 
+		
+		File usersFile = new File("txtFiles/users.txt");
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(usersFile, true))) {
+			int state = 0;
+			String line = username + ";" + password + ";" + email + ";" + role + ";" + state;
+			bw.write(line);
+			bw.newLine();
+			System.out.println("Usuario guardado en users.txt: " + username);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void deleteUser(String username) {
-		System.out.println("Usuario borrao");
+		User userToRemove = null;
+		for (User u : usersList) {
+			if (u.getUsername().equals(username)) {
+				userToRemove = u;
+				break;
+			}
+		}
+
+		if (userToRemove != null) {
+			usersList.remove(userToRemove);
+			rewriteUsersFile();
+			System.out.println("Usuario eliminado con éxito: " + username);
+		} else {
+			System.err.println("No se encontró el usuario: " + username);
+		}
 	}
 
-	public static void createNewUser(String username, String password) {
-		System.out.println("Usuario creao");
+	private static void rewriteUsersFile() {
+		File usersFile = new File("txtFiles/users.txt");
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(usersFile, false))) {
+			for (User u : usersList) {
+				int state = u.isNew() ? 0 : 1;
+				String line = u.getUsername() + ";" + u.getPassword() + ";" + u.getEmail() + ";" + u.getRole() + ";" + state;
+				bw.write(line);
+				bw.newLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static boolean checkState(int givenState) {

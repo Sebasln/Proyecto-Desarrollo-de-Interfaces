@@ -11,6 +11,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -31,9 +35,27 @@ public class LoginWindow extends JFrame {
 	}
 
 	private void initialize() {
+		// --- MENU BAR (Ayuda) ---
+		JMenuBar menuBar = new JMenuBar();
+		this.setJMenuBar(menuBar);
+		
+		JMenu mnAyuda = new JMenu("Ayuda");
+		menuBar.add(mnAyuda);
+		
+		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
+		mntmAcercaDe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, 
+						"Proyecto DAM 25/26\nDesarrollado por: Sebastián Silva\nVersión 25.12.11", 
+						"Acerca de", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		mnAyuda.add(mntmAcercaDe);
+
 		this.getContentPane().setBackground(new Color(40, 40, 40));
 		this.setBounds(100, 100, 450, 350); // Ventana más pequeña
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Cambiado a DO_NOTHING
+		this.setResizable(false); // Requisito: No redimensionable
 		// Confirmación al cerrar
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
@@ -117,6 +139,7 @@ public class LoginWindow extends JFrame {
 		JButton loginButton = new JButton("Iniciar sesión");
 		loginButton.setBounds(centerX - 56, 230, 112, 23); // Centrado
 		this.getContentPane().add(loginButton);
+		this.getRootPane().setDefaultButton(loginButton); //locura de linea para que al darle al enter intente iniciar sesión
 
 		JLabel passwordWarningLabel = new JLabel("Este campo es obligatorio");
 		passwordWarningLabel.setFont(new Font("Tahoma", Font.BOLD, 11));

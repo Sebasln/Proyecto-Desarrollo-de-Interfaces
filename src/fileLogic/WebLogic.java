@@ -12,50 +12,45 @@ public class WebLogic {
 	public static ArrayList<NewsContent> newsList = new ArrayList<>();
 
 	public static void setNewsProperties() {
-		File urls = new File("txtFiles/settings.txt");
+		newsList.clear();
+		File settingsFile = new File("txtFiles/settings.txt");
 
-		if (!(urls.exists())) {
-			System.out.println("No se pueden buscar noticias porque no existe settings.txt");
+		if (!settingsFile.exists()) {
+			System.err.println("No existe settings.txt, no se pueden cargar noticias.");
 			return;
 		}
 
-		try (FileReader fr = new FileReader(urls); BufferedReader br = new BufferedReader(fr);) {
+		try (FileReader fr = new FileReader(settingsFile); BufferedReader br = new BufferedReader(fr)) {
 			String line;
 			boolean isUrlSection = false;
 
 			while ((line = br.readLine()) != null) {
-				if (line.trim().isEmpty()) {
-					continue;
-				}
+				line = line.trim();
+				if (line.isEmpty()) continue;
 
-				if (line.startsWith("SECTION;")) {
-					if (line.contains("URL")) {
-						isUrlSection = true;
-					} else {
-						isUrlSection = false;
-					}
+				if (line.startsWith("SECTION;URL")) {
+					isUrlSection = true;
+					continue;
+				} else if (line.startsWith("SECTION;")) {
+					isUrlSection = false;
 					continue;
 				}
 
 				if (isUrlSection) {
-					String[] newsFields = line.split(";", -1);
+					String[] parts = line.split(";", -1);
 					
-					if (newsFields.length < 7) {
-						System.out.println("Linea mal formada en settings.txt: " + line);
-						continue;
-					}
-
-					String category = checkNullity(newsFields[0], 0);
-					String url1 = checkNullity(newsFields[1], 1);
-					String selector1 = checkNullity(newsFields[2], 2);
-					String url2 = checkNullity(newsFields[3], 3);
-					String selector2 = checkNullity(newsFields[4], 4);
-					String url3 = checkNullity(newsFields[5], 5);
-					String selector3 = checkNullity(newsFields[6], 6);
-
-					if (category != null) {
-						NewsContent newsCategory = new NewsContent(category, url1, selector1, url2, selector2, url3, selector3);
-						newsList.add(newsCategory);
+					if (parts.length >= 7) {
+						String category = parts[0].trim();
+						String u1 = parts[1].trim();
+						String s1 = parts[2].trim();
+						String u2 = parts[3].trim();
+						String s2 = parts[4].trim();
+						String u3 = parts[5].trim();
+						String s3 = parts[6].trim();
+						
+						if (!category.isEmpty()) {
+							newsList.add(new NewsContent(category, u1, s1, u2, s2, u3, s3));
+						}
 					}
 				}
 			}
@@ -63,6 +58,24 @@ public class WebLogic {
 			e.printStackTrace();
 		}
 	}
+
+	public static void saveLog(String username, ArrayList<String> headlines, String timeStamp) {
+    File logFile = new File("txtFiles/log.txt");
+    try (java.io.FileWriter fw = new java.io.FileWriter(logFile, true); 
+        java.io.BufferedWriter bw = new java.io.BufferedWriter(fw)) {
+        
+        bw.write("--- LOG: " + username + " [" + timeStamp + "] ---");
+        bw.newLine();
+        for (String h : headlines) {
+            bw.write(h);
+            bw.newLine();
+        }
+        bw.newLine();
+        
+    } catch (java.io.IOException e) {
+        e.printStackTrace();
+    }
+}
 
 	public static String checkNullity(String field, int position) {
 		if (field.equals("") || field == null) {

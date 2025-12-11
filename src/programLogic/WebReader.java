@@ -72,15 +72,32 @@ public class WebReader {
 			ArrayList<String> retrieved = new ArrayList<>();
 			try {
 				Document doc = Jsoup.connect(url)
-						.userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-						.timeout(5000) 
+						.userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+						.referrer("http://www.google.com") 
+						.timeout(10000) // SUBIDO A 10 SEGUNDOS
+						.ignoreHttpErrors(true)
 						.get();
 				
 				Elements elements = doc.select(selector);
-				// Cogemos hasta 'limit' titulares por si acaso necesitamos rellenar huecos
-				for (int j = 0; j < Math.min(elements.size(), limit); j++) {
-					String txt = elements.get(j).text();
-					if (txt.length() > 5) {
+				
+				if (elements.isEmpty()) {
+					System.out.println("AVISO: Cero noticias encontradas en " + url + " (Selector: " + selector + "). Posible cambio de diseño web.");
+				}
+
+				// Lógica específica para El Mundo: saltar los primeros 5 H2 (juegos/pasatiempos)
+				int skipCount = 0;
+				if (url.contains("elmundo.es")) {
+					skipCount = 5;
+				}
+
+				// Cogemos hasta 'limit' titulares VÁLIDOS
+				for (int j = skipCount; j < elements.size(); j++) {
+					if (retrieved.size() >= limit) break; // Ya tenemos suficientes
+					
+					String txt = elements.get(j).text().trim();
+					
+					// Filtro de ruido (Blacklist)
+					if (txt.length() > 5 && !isNoise(txt)) {
 						retrieved.add(txt);
 					}
 				}
@@ -116,5 +133,20 @@ public class WebReader {
 			}
 			maxIndex++;
 		}
+	}
+
+	private static boolean isNoise(String txt) {
+		String[] blacklist = {
+			"Principales", "Más noticias", "Destacamos", "Video y audio", 
+			"No te lo pierdas", "Próximos Lanzamientos", "Temas", "Suscríbete",
+			"Iniciar sesión", "Regístrate", "Contacto", "Publicidad", "Aviso Legal",
+			"Política de privacidad", "Cookies", "Lo más leído", "Lo más visto",
+			"Newsletter", "Hemeroteca"
+		};
+		
+		for (String bad : blacklist) {
+			if (txt.equalsIgnoreCase(bad)) return true;
+		}
+		return false;
 	}
 }

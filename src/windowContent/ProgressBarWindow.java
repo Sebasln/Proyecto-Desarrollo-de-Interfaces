@@ -46,16 +46,17 @@ public class ProgressBarWindow extends JWindow{
 						e.printStackTrace();
 					}
 					
-					if (i == 80) {
+					// 50ms * 100 = 5000ms = 5 segundos
+					
+					if (i == 80) { // Al 80% (aprox 4 segundos)
 						try {
 							UserLogic.readUsers();
 							UserLogic.readUserPreferences();
-							// Cargamos la configuración de URLs y selectores
+							// Cargamos la configuración de URLs y selectores (ahora hardcodeada en ConfigLogic)
 							WebLogic.setNewsProperties();
-							continue;
 						} catch (FileNotFoundException e) {
-							
-							e.printStackTrace();
+							javax.swing.JOptionPane.showMessageDialog(null, "Error crítico: Faltan archivos de sistema (users.txt o settings.txt).\nLa aplicación se cerrará.", "Error Fatal", javax.swing.JOptionPane.ERROR_MESSAGE);
+							System.exit(1); 
 						}
 					}
 				}				
