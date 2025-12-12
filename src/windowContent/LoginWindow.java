@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 
 import javax.swing.ImageIcon;
@@ -37,32 +39,29 @@ public class LoginWindow extends JFrame {
 	private void initialize() {
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
-		
+
 		JMenu mnAyuda = new JMenu("Ayuda");
 		menuBar.add(mnAyuda);
-		
+
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
 		mntmAcercaDe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, 
-						"Proyecto DAM 25/26\nDesarrollado por: Sebastián Silva\nVersión 25.12.11", 
+				JOptionPane.showMessageDialog(null, "Desarrollador: Sebastián Silva\nVersión 25.12.12.sangre.lágrimas",
 						"Acerca de", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		mnAyuda.add(mntmAcercaDe);
 
 		this.getContentPane().setBackground(new Color(40, 40, 40));
-		this.setBounds(100, 100, 450, 350); 
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
-		this.setResizable(false); 
-		
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		this.setBounds(100, 100, 450, 350);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.setResizable(false);
+
+		this.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				if (JOptionPane.showConfirmDialog(null, 
-					"¿Estás seguro de que quieres salir?", "Cerrar Aplicación", 
-					JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+			public void windowClosing(WindowEvent windowEvent) {
+				if (JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quieres salir?", "Cerrar Aplicación",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 					System.exit(0);
 				}
 			}
@@ -70,8 +69,8 @@ public class LoginWindow extends JFrame {
 		this.getContentPane().setLayout(null);
 		this.setLocationRelativeTo(null);
 
-		int centerX = 225; 
-		int width = 200;   
+		int centerX = 225;
+		int width = 200;
 		int xPos = centerX - (width / 2);
 
 		JLabel headerLabel = new JLabel("Inicio de sesión");
@@ -100,30 +99,30 @@ public class LoginWindow extends JFrame {
 		passwordLabel.setBounds(xPos, 145, width, 14);
 		this.getContentPane().add(passwordLabel);
 
+		passwordTField = new JPasswordField();
+		passwordTField.setBounds(xPos, 170, width, 20);
 		this.getContentPane().add(passwordTField);
 		passwordTField.setColumns(10);
-		
-		
+
 		ImageIcon ojoAbiertoIcon = new ImageIcon("images/ojoAbierto.jpg");
 		Image imgAbierto = ojoAbiertoIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 		ImageIcon iconAbierto = new ImageIcon(imgAbierto);
-		
+
 		ImageIcon ojoCerradoIcon = new ImageIcon("images/ojoCerrado.jpg");
 		Image imgCerrado = ojoCerradoIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 		ImageIcon iconCerrado = new ImageIcon(imgCerrado);
-		
-		
+
 		JToggleButton togglePasswordBtn = new JToggleButton();
-		
-		togglePasswordBtn.setBounds(xPos + width + 5, 169, 25, 22); 
+
+		togglePasswordBtn.setBounds(xPos + width + 5, 169, 25, 22);
 		togglePasswordBtn.setIcon(iconCerrado);
 		togglePasswordBtn.setToolTipText("Mostrar/Ocultar contraseña");
-		
+
 		togglePasswordBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (togglePasswordBtn.isSelected()) {
-					passwordTField.setEchoChar((char)0);
+					passwordTField.setEchoChar((char) 0);
 					togglePasswordBtn.setIcon(iconAbierto);
 				} else {
 					passwordTField.setEchoChar('•');
@@ -134,7 +133,7 @@ public class LoginWindow extends JFrame {
 		this.getContentPane().add(togglePasswordBtn);
 
 		JButton loginButton = new JButton("Iniciar sesión");
-		loginButton.setBounds(centerX - 56, 230, 112, 23); 
+		loginButton.setBounds(centerX - 56, 230, 112, 23);
 		this.getContentPane().add(loginButton);
 		this.getRootPane().setDefaultButton(loginButton);
 
@@ -153,7 +152,7 @@ public class LoginWindow extends JFrame {
 		usernameWarningLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		usernameWarningLabel.setBounds(xPos, 128, width, 14);
 		this.getContentPane().add(usernameWarningLabel);
-		
+
 		JLabel autenticationFailedLabel = new JLabel("Usuario o contraseña incorrectos");
 		autenticationFailedLabel.setForeground(new Color(255, 32, 32));
 		autenticationFailedLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -172,20 +171,19 @@ public class LoginWindow extends JFrame {
 							autenticationFailedLabel);
 					return;
 				}
-				System.out.println(username + ", " + password);
-
 				for (User u : UserLogic.usersList) {
-					String loadedUser = u.getUsername();		
+					String loadedUser = u.getUsername();
 					String loadedPassword = u.getPassword();
-
+					
+					System.out.println(u.toString());
 					if (loadedUser.equals(username) && loadedPassword.equals(password)) {
 						if (u.getRole().toLowerCase().equals("admin")) {
-							new AdminWindow(u); 
+							new AdminWindow(u);
 						} else {
 							if (u.isNew() == true) {
 								new UserConfigWindow(u);
 							} else {
-								new MainWindow(u); 
+								new MainWindow(u);
 							}
 						}
 						LoginWindow.this.dispose();
@@ -201,11 +199,11 @@ public class LoginWindow extends JFrame {
 		if ((us.equals("") || us == null) && (pas.equals("") || pas == null)) {
 			passWarn.setVisible(true);
 			usWarn.setVisible(true);
-		} else if((us.equals("") || us == null) && (!(pas.equals("")) || pas != null)) {
+		} else if ((us.equals("") || us == null) && (!(pas.equals("")) || pas != null)) {
 			usWarn.setVisible(true);
-		} else if((pas.equals("") || pas == null) && (!(us.equals("")) || us != null)) {
+		} else if ((pas.equals("") || pas == null) && (!(us.equals("")) || us != null)) {
 			passWarn.setVisible(true);
-		} else{
+		} else {
 			usWarn.setVisible(false);
 			passWarn.setVisible(false);
 			aFailed.setVisible(false);

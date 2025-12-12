@@ -1,4 +1,6 @@
-admin;1234;fp.rrodriguezgarcia@salesianosdosa.com;ADMIN;1
-sebas;1111;fp.ssilvanarro@salesianosdosa.com;USER;0
-roberto;2222;roberto.rodriguez.dosa@gmail.com;USER;0
-miguel;3333;miguel.monteagudo.dosa@gmail.com;USER;0
+admin;1234;fp.ssilvanarro@salesianosdosa.com;ADMIN;0
+sebas;1111;fp.rrodriguezgarcia@salesianosdosa.com;USER;1
+roberto;2222;roberto.rodriguez.dosa@gmail.com;USER;1
+miguel;3333;miguel.monteagudo.dosa@gmail.com;USER;1
+lucas;4444;e;USER;1
+marcos;5555;a;user;1

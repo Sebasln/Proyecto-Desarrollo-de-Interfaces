@@ -16,6 +16,7 @@ public class UserLogic {
 	static public ArrayList<User> usersList = new ArrayList<>();
 
 	public static void readUsers() throws FileNotFoundException {
+		usersList.clear(); // Evitar duplicados si se llama mÃ¡s de una vez
 
 		File users = new File("txtFiles/users.txt");
 
@@ -33,19 +34,20 @@ public class UserLogic {
 				String username = checkNullity(userFields[0], 0);
 				String password = checkNullity(userFields[1], 1);
 				String email = checkNullity(userFields[2], 2);
-
 				String userRole = checkRole(userFields[3]);
-				int stateInt = 0;
-				try {
-					if (userFields.length > 4 && !userFields[4].isEmpty()) {
-						stateInt = Integer.parseInt(userFields[4]);
+				
+				// Leer estado (campo 4)
+				boolean isNew = true;
+				if (userFields.length > 4) {
+					try {
+						int stateInt = Integer.parseInt(userFields[4].trim());
+						isNew = checkState(stateInt);
+					} catch (NumberFormatException e) {
+						System.err.println("Error parseando estado para " + username + ", asumiendo nuevo.");
 					}
-				} catch (NumberFormatException e) {
-					System.err.println("Error parsing state for user " + username + ", defaulting to 0/True");
 				}
-				boolean userState = checkState(stateInt);
 
-				User user = new User(username, password, email, userRole, userState, new ArrayList<>());
+				User user = new User(username, password, email, userRole, isNew, new ArrayList<>());
 
 				usersList.add(user);
 			}
@@ -58,7 +60,8 @@ public class UserLogic {
 		File usersPreferences = new File("txtFiles/settings.txt");
 
 		if (!(usersPreferences.exists())) {
-			System.err.println("No existe settings.txt, por lo que no se pueden cargar las preferencias de los usuarios");
+			System.err
+					.println("No existe settings.txt, por lo que no se pueden cargar las preferencias de los usuarios");
 			return;
 		}
 
@@ -91,7 +94,15 @@ public class UserLogic {
 						for (User u : usersList) {
 							if (u.getUsername().equals(username)) {
 								u.setPreferencesList(userPreferences);
-								u.setNew(false);
+								
+								// Si tiene preferencias (> 0), ya no es nuevo.
+								// Excluyendo ADMIN si es necesario, aunque el ADMIN suele tener isNew=false por defecto o se ignora.
+								if (u.getPreferencesList().size() > 0 && !u.getRole().equalsIgnoreCase("ADMIN")) {
+									u.setNew(false);
+								} else if (!u.getRole().equalsIgnoreCase("ADMIN")) {
+									// Si no es admin y no tiene preferencias, es nuevo.
+									u.setNew(true);
+								}
 							}
 						}
 					}
@@ -105,17 +116,37 @@ public class UserLogic {
 	public static void writeUserPreferences(User user) {
 		File usersPreferences = new File("txtFiles/settings.txt");
 
-		if (!(usersPreferences.exists())) {
-			System.err.println("No existe settings.txt, por lo que no se pueden guardar las preferencias");
-			return;
-		}
+		// No check for existence, we will create/overwrite it to ensure structure.
 
 		try (FileWriter fw = new FileWriter(usersPreferences); BufferedWriter bw = new BufferedWriter(fw)) {
+			
+			// 1. Escribir la Sección de URLs (Hardcoded para asegurar integridad)
+			bw.write("SECTION;URL");
+			bw.newLine();
+			bw.write("NACIONAL;https://elpais.com/espana/;article h2 a;https://www.elmundo.es/espana.html;article header a;https://www.abc.es/espana/;article h2 a");
+			bw.newLine();
+			bw.write("INTERNACIONAL;https://elpais.com/internacional/;article h2 a;https://www.elmundo.es/internacional.html;article header a;https://www.abc.es/internacional/;article h2 a");
+			bw.newLine();
+			bw.write("ECONOMIA;https://elpais.com/economia/;article h2 a;https://www.elmundo.es/economia.html;article header a;https://www.abc.es/economia/;article h2 a");
+			bw.newLine();
+			bw.write("DEPORTES;https://as.com/;article h2 a;https://www.marca.com/;div.ue-c-cover-content__body h2 a;https://www.sport.es/;article h2 a");
+			bw.newLine();
+			bw.write("TECNOLOGIA;https://elpais.com/tecnologia/;article h2 a;https://www.elmundo.es/tecnologia.html;article header a;https://www.abc.es/tecnologia/;article h2 a");
+			bw.newLine();
+			bw.write("VIDEOJUEGOS;https://vandal.elespanol.com/;div.caja h2 a;https://www.3djuegos.com/;article h2 a;https://www.hobbyconsolas.com/;article h2 a");
+			bw.newLine();
+
+			// 2. Escribir la Sección de Preferencias
+			bw.write("SECTION;USERS_PREFERENCES");
+			bw.newLine();
 
 			for (User u : usersList) {
+				System.out.println("DEBUG: Guardando preferencias para " + u.getUsername() + " (Cats: " + (u.getPreferencesList() != null ? u.getPreferencesList().size() : 0) + ")");
 				bw.write(u.getUsername());
-				for (String category : u.getPreferencesList()) {
-					bw.write(";" + category);
+				if (u.getPreferencesList() != null) {
+					for (String category : u.getPreferencesList()) {
+						bw.write(";" + category);
+					}
 				}
 				bw.newLine();
 			}
@@ -124,7 +155,6 @@ public class UserLogic {
 		}
 	}
 
-
 	public static void createNewUser(String username, String password, String email, String role) {
 		for (User u : usersList) {
 			if (u.getUsername().equals(username)) {
@@ -132,22 +162,35 @@ public class UserLogic {
 				return;
 			}
 		}
-		
+
 		User newUser = new User(username, password, email, role, true);
-		usersList.add(newUser); 
-		
+		usersList.add(newUser);
+
 		File usersFile = new File("txtFiles/users.txt");
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(usersFile, true))) {
+			// Asegurar que empezamos en nueva línea
+			// Una forma robusta es leer el archivo antes o simplemente escribir newLine() al principio si no está vacío
+			// Pero append mode simple: escribir newLine() -> escribir dato.
+			// Ojo: si el archivo termina con newLine, quedará una línea vacía.
+			// La forma más segura dadas las circunstancias:
+			bw.newLine(); 
+			
 			int state = 0;
 			String line = username + ";" + password + ";" + email + ";" + role + ";" + state;
 			bw.write(line);
-			bw.newLine();
+			// No escribimos newLine AL FINAL para evitar lineas vacías extra problemáticas en la lectura simple
+			
 			System.out.println("Usuario guardado en users.txt: " + username);
 		} catch (IOException e) {
 			System.err.println("Ha ocurrido este problema: " + e.getMessage());
 		}
+		
+		// Actualizar settings.txt para incluir al nuevo usuario (sin preferencias aun)
+		// Simplemente guardamos la lista actual de usuarios en settings.txt
+		// Como newUser ya está en usersList, aparecerá en el archivo.
+		writeUserPreferences(newUser); 
 	}
-	
+
 	public static void deleteUser(String username) {
 		User userToRemove = null;
 		for (User u : usersList) {
@@ -166,12 +209,13 @@ public class UserLogic {
 		}
 	}
 
-	private static void rewriteUsersFile() {
+	public static void rewriteUsersFile() {
 		File usersFile = new File("txtFiles/users.txt");
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(usersFile, false))) {
 			for (User u : usersList) {
 				int state = u.isNew() ? 0 : 1;
-				String line = u.getUsername() + ";" + u.getPassword() + ";" + u.getEmail() + ";" + u.getRole() + ";" + state;
+				String line = u.getUsername() + ";" + u.getPassword() + ";" + u.getEmail() + ";" + u.getRole() + ";"
+						+ state;
 				bw.write(line);
 				bw.newLine();
 			}

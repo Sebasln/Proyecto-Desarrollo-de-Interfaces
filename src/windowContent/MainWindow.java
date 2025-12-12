@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -52,11 +54,13 @@ public class MainWindow extends JFrame {
 		mntmAcercaDe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(null, 
-						"Proyecto DAM 25/26\nDesarrollado por: Sebastián Silva\nVersión 25.12.11", 
+						"Desarrollador: Sebastián Silva\nVersión 25.12.12.sangre.lágrimas", 
 						"Acerca de", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		mnAyuda.add(mntmAcercaDe);
+		
+		
 
 		this.getContentPane().setBackground(new Color(40, 40, 40));
 		this.setBounds(100, 50, 900, 900);
@@ -69,9 +73,9 @@ public class MainWindow extends JFrame {
 		this.setLocationRelativeTo(null); 
 		this.setResizable(false); 
 		
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		this.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+			public void windowClosing(WindowEvent windowEvent) {
 				if (JOptionPane.showConfirmDialog(null, 
 					"¿Estás seguro de que quieres salir?", "Cerrar Aplicación", 
 					JOptionPane.YES_NO_OPTION,
@@ -230,8 +234,6 @@ public class MainWindow extends JFrame {
 				if (news.isEmpty()) {
 					labels[0].setText("No se encontraron noticias para tus intereses.");
 				}
-				
-				
 				btnGuardar.setEnabled(true);
 			});
 		});

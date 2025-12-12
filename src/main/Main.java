@@ -1,7 +1,8 @@
 package main;
 
 import javax.swing.SwingUtilities;
-
+import programLogic.AutoEmailThread;
+import windowContent.ProgressBarWindow;
 
 public class Main {
 
@@ -9,12 +10,9 @@ public class Main {
 				
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new programLogic.AutoEmailThread().start();
-				new windowContent.ProgressBarWindow();
+				new AutoEmailThread().start();
+				new ProgressBarWindow();
 			}
 		});
 	}
-
-	
-
 }

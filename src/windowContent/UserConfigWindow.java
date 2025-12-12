@@ -4,8 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.ImageIcon;
-
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -43,7 +44,7 @@ public class UserConfigWindow extends JFrame {
 		mntmAcercaDe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(null, 
-						"Desarrollador: Sebastián Silva\nVersión 25.12.11.sangre.lágrimas", 
+						"Desarrollador: Sebastián Silva\nVersión 25.12.12.sangre.lágrimas", 
 						"Acerca de", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
@@ -59,9 +60,9 @@ public class UserConfigWindow extends JFrame {
 		this.setResizable(false); 
 		
 		
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		this.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+			public void windowClosing(WindowEvent windowEvent) {
 				if (JOptionPane.showConfirmDialog(null, 
 					"¿Estás seguro de que quieres salir?", "Cerrar Aplicación", 
 					JOptionPane.YES_NO_OPTION,
@@ -123,7 +124,7 @@ public class UserConfigWindow extends JFrame {
         this.getContentPane().add(techCBox);
 
         JButton submitCategoriesBtn = new JButton("Seleccionar");
-        submitCategoriesBtn.setBounds(167, 214, 88, 22);
+        submitCategoriesBtn.setBounds(167, 214, 100, 22);
         this.getContentPane().add(submitCategoriesBtn);
 
         JLabel emptinessWarningLabel = new JLabel("Seleccione al menos una categoría");
@@ -163,8 +164,11 @@ public class UserConfigWindow extends JFrame {
 
                 user.setNew(false);
                 UserLogic.writeUserPreferences(user);
+                UserLogic.rewriteUsersFile(); // Guardar estado '1' en users.txt
                 emptinessWarningLabel.setVisible(false); 
                 dispose();
+                
+                new MainWindow(user);
             }
         });
     }

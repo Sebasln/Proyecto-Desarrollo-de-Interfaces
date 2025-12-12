@@ -18,7 +18,6 @@ public class AutoEmailThread extends Thread {
 
 	@Override
 	public void run() {
-		System.out.println("AutoEmailThread iniciado.");
 		while (true) {
 			try {
 				String configuredTime = ConfigLogic.get("TIME");
@@ -68,16 +67,16 @@ public class AutoEmailThread extends Thread {
 			String subject = "NOTICIAS DAM";
 			StringBuilder body = new StringBuilder();
 			
-			body.append("• " + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()) + "\n");
+			body.append(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()) + "\n");
 			body.append("--------------------------------------------------\n\n");
 			
 			String lastCat = "";
 			for (NewsItem item : news) {
 				if (!item.getCategory().equals(lastCat)) {
-					body.append("\n• " + item.getCategory() + ":\n");
+					body.append("\n" + item.getCategory() + ":\n");
 					lastCat = item.getCategory();
 				}
-				body.append("✓ " + item.getHeadline());
+				body.append(item.getHeadline());
 				if (item.getUrl() != null && !item.getUrl().isEmpty()) {
 					body.append(" [" + item.getUrl() + "]");
 				}
