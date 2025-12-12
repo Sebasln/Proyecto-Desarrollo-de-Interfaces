@@ -140,7 +140,8 @@ public class UserLogic {
 			bw.write("SECTION;USERS_PREFERENCES");
 			bw.newLine();
 
-			for (User u : usersList) {
+			for (int i = 0; i < usersList.size(); i++) {
+				User u = usersList.get(i);
 				System.out.println("DEBUG: Guardando preferencias para " + u.getUsername() + " (Cats: " + (u.getPreferencesList() != null ? u.getPreferencesList().size() : 0) + ")");
 				bw.write(u.getUsername());
 				if (u.getPreferencesList() != null) {
@@ -148,7 +149,10 @@ public class UserLogic {
 						bw.write(";" + category);
 					}
 				}
-				bw.newLine();
+				// Solo añadimos nueva línea si NO es el último elemento
+				if (i < usersList.size() - 1) {
+					bw.newLine();
+				}
 			}
 		} catch (IOException e) {
 			System.err.println("Ha ocurrido este problema: " + e.getMessage());
@@ -166,29 +170,25 @@ public class UserLogic {
 		User newUser = new User(username, password, email, role, true);
 		usersList.add(newUser);
 
+		appendUserToFile(newUser);
+		
+		// Actualizar settings.txt para incluir al nuevo usuario
+		writeUserPreferences(newUser); 
+	}
+
+	public static void appendUserToFile(User u) {
 		File usersFile = new File("txtFiles/users.txt");
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(usersFile, true))) {
-			// Asegurar que empezamos en nueva línea
-			// Una forma robusta es leer el archivo antes o simplemente escribir newLine() al principio si no está vacío
-			// Pero append mode simple: escribir newLine() -> escribir dato.
-			// Ojo: si el archivo termina con newLine, quedará una línea vacía.
-			// La forma más segura dadas las circunstancias:
-			bw.newLine(); 
+			bw.newLine(); // Salto de línea inicial para separar del usuario anterior
 			
-			int state = 0;
-			String line = username + ";" + password + ";" + email + ";" + role + ";" + state;
+			int state = u.isNew() ? 0 : 1;
+			String line = u.getUsername() + ";" + u.getPassword() + ";" + u.getEmail() + ";" + u.getRole() + ";" + state;
 			bw.write(line);
-			// No escribimos newLine AL FINAL para evitar lineas vacías extra problemáticas en la lectura simple
 			
-			System.out.println("Usuario guardado en users.txt: " + username);
+			System.out.println("Usuario guardado en users.txt: " + u.getUsername());
 		} catch (IOException e) {
 			System.err.println("Ha ocurrido este problema: " + e.getMessage());
 		}
-		
-		// Actualizar settings.txt para incluir al nuevo usuario (sin preferencias aun)
-		// Simplemente guardamos la lista actual de usuarios en settings.txt
-		// Como newUser ya está en usersList, aparecerá en el archivo.
-		writeUserPreferences(newUser); 
 	}
 
 	public static void deleteUser(String username) {
@@ -203,6 +203,8 @@ public class UserLogic {
 		if (userToRemove != null) {
 			usersList.remove(userToRemove);
 			rewriteUsersFile();
+			// Actualizamos también settings.txt para borrar sus preferencias
+			writeUserPreferences(null); 
 			System.out.println("Usuario eliminado con éxito: " + username);
 		} else {
 			System.err.println("No se encontró el usuario: " + username);
@@ -212,12 +214,17 @@ public class UserLogic {
 	public static void rewriteUsersFile() {
 		File usersFile = new File("txtFiles/users.txt");
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(usersFile, false))) {
-			for (User u : usersList) {
+			for (int i = 0; i < usersList.size(); i++) {
+				User u = usersList.get(i);
 				int state = u.isNew() ? 0 : 1;
-				String line = u.getUsername() + ";" + u.getPassword() + ";" + u.getEmail() + ";" + u.getRole() + ";"
-						+ state;
+				String line = u.getUsername() + ";" + u.getPassword() + ";" + u.getEmail() + ";" + u.getRole() + ";" + state;
+				
 				bw.write(line);
-				bw.newLine();
+				
+				// Solo añadimos nueva línea si NO es el último elemento
+				if (i < usersList.size() - 1) {
+					bw.newLine();
+				}
 			}
 		} catch (IOException e) {
 			System.err.println("Ha ocurrido este problema: " + e.getMessage());
