@@ -1,4 +1,4 @@
-admin;1234;fp.ssilvanarro@salesianosdosa.com;ADMIN;0
-sebas;1111;fp.rrodriguezgarcia@salesianosdosa.com;USER;1
-marcos;5555;a;USER;1
-lucas;4444;qa;USER;0
+admin;a;fp.ssilvanarro@salesianosdosa.com;ADMIN;0
+roberto;a;a@a.com;USER;0
+miguel;a;a@a.com;USER;0
+sebas;a@a.com;a;USER;1

@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -17,21 +16,19 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-
 import fileLogic.UserLogic;
-
 import java.util.ArrayList;
 import java.util.Date;
-
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
-
 import objects.NewsItem;
 import objects.User;
 import programLogic.EmailLogic;
 import programLogic.WebReader;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al enter borre o cree el usuario
+public class AdminWindow extends JFrame {
 
 	private User user;
 	private JLayeredPane menuPane;
@@ -63,9 +60,9 @@ public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al 
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		this.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+			public void windowClosing(WindowEvent windowEvent) {
 				if (JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quieres salir?", "Cerrar Aplicación",
 						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 					System.exit(0);
@@ -76,17 +73,17 @@ public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al 
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
 
-		JMenu mnAyuda = new JMenu("Ayuda");
-		menuBar.add(mnAyuda);
+		JMenu help = new JMenu("Ayuda");
+		menuBar.add(help);
 
-		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
-		mntmAcercaDe.addActionListener(new ActionListener() {
+		JMenuItem about = new JMenuItem("Acerca de");
+		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Desarrollador: Sebastián Silva\nVersión 25.12.12.sangre.lágrimas",
+				JOptionPane.showMessageDialog(null, "Desarrollador: Sebastián Silva\nVersión sangre.sudor.lágrimas",
 						"Acerca de", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-		mnAyuda.add(mntmAcercaDe);
+		help.add(about);
 
 		this.getContentPane().setLayout(null);
 		this.setLocationRelativeTo(null);
@@ -105,38 +102,48 @@ public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al 
 		headerAdminLbl.setBounds(10, 30, 764, 50);
 		menuPane.add(headerAdminLbl);
 
-		int btnWidth = 220;
-		int btnHeight = 100;
-		int startX = 50;
-		int gap = 20;
-
 		JButton goToCreateUserBtn = new JButton("Crear usuario");
 		goToCreateUserBtn.setFont(new Font("Tahoma", Font.BOLD, 14));
 		goToCreateUserBtn.setForeground(new Color(0, 0, 0));
 		goToCreateUserBtn.setBackground(new Color(255, 255, 255));
-		goToCreateUserBtn.setBounds(startX, 200, btnWidth, btnHeight);
+		goToCreateUserBtn.setBounds(162, 150, 220, 100);
 		menuPane.add(goToCreateUserBtn);
 
 		JButton goToDeleteUserBtn = new JButton("Borrar usuario");
 		goToDeleteUserBtn.setFont(new Font("Tahoma", Font.BOLD, 14));
 		goToDeleteUserBtn.setForeground(new Color(0, 0, 0));
 		goToDeleteUserBtn.setBackground(new Color(255, 255, 255));
-		goToDeleteUserBtn.setBounds(startX + btnWidth + gap, 200, btnWidth, btnHeight);
+		goToDeleteUserBtn.setBounds(402, 150, 220, 100);
 		menuPane.add(goToDeleteUserBtn);
 
 		JButton goToTestNews = new JButton("Probar noticias");
 		goToTestNews.setFont(new Font("Tahoma", Font.BOLD, 14));
 		goToTestNews.setForeground(new Color(0, 0, 0));
 		goToTestNews.setBackground(new Color(255, 255, 255));
-		goToTestNews.setBounds(startX + (btnWidth + gap) * 2, 200, btnWidth, btnHeight);
+		goToTestNews.setBounds(162, 280, 220, 100);
 		menuPane.add(goToTestNews);
 
 		JButton goToEmailBtn = new JButton("Enviar correo");
 		goToEmailBtn.setFont(new Font("Tahoma", Font.BOLD, 14));
 		goToEmailBtn.setForeground(new Color(0, 0, 0));
 		goToEmailBtn.setBackground(new Color(255, 255, 255));
-		goToEmailBtn.setBounds(startX + btnWidth / 2 + gap, 320, btnWidth, btnHeight);
+		goToEmailBtn.setBounds(402, 280, 220, 100);
 		menuPane.add(goToEmailBtn);
+
+		JButton goToLogoutBtn = new JButton("Volver al login");
+		goToLogoutBtn.setFont(new Font("Tahoma", Font.BOLD, 12));
+		goToLogoutBtn.setForeground(new Color(0, 0, 0));
+		goToLogoutBtn.setBackground(new Color(255, 255, 255));
+		goToLogoutBtn.setBounds(20, 500, 150, 30);
+		menuPane.add(goToLogoutBtn);
+
+		goToLogoutBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new LoginWindow();
+				dispose();
+			}
+		});
 
 		createUserPane = new JLayeredPane();
 		createUserPane.setLayout(null);
@@ -156,6 +163,9 @@ public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al 
 		createUserLbl.setForeground(new Color(255, 255, 255));
 		createUserLbl.setBounds(10, 10, 764, 50);
 		createUserPane.add(createUserLbl);
+
+		// entre el window application y este codigo, tocó ser creativos y hacer un css
+		// rustico a mano
 
 		int labelX = 200;
 		int fieldX = 350;
@@ -202,7 +212,7 @@ public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al 
 		roleLbl.setHorizontalAlignment(SwingConstants.RIGHT);
 		roleLbl.setForeground(Color.WHITE);
 		roleLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
-		roleLbl.setBounds(labelX, startY + spacing * 3, 150, 20);
+		roleLbl.setBounds(labelX, startY + spacing * 3, 200, 20);
 		createUserPane.add(roleLbl);
 
 		JButton createUserBtn = new JButton("Crear");
@@ -274,13 +284,6 @@ public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al 
 		emailHeaderLbl.setBounds(10, 30, 764, 50);
 		emailPane.add(emailHeaderLbl);
 
-		JLabel infoLbl = new JLabel(
-				"<html>Se enviará un resumen de noticias<br>basado en las preferencias del usuario.</html>");
-		infoLbl.setForeground(Color.WHITE);
-		infoLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		infoLbl.setBounds(250, 140, 300, 40);
-		emailPane.add(infoLbl);
-
 		JButton sendEmailBtn = new JButton("Enviar Noticias");
 		sendEmailBtn.setFont(new Font("Tahoma", Font.BOLD, 14));
 		sendEmailBtn.setBounds(300, 200, 150, 30);
@@ -290,7 +293,7 @@ public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al 
 		statusLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		statusLbl.setForeground(Color.YELLOW);
 		statusLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
-		statusLbl.setBounds(200, 240, 350, 30);
+		statusLbl.setBounds(10, 240, 764, 30);
 		emailPane.add(statusLbl);
 
 		JButton backFromEmailBtn = new JButton("Volver");
@@ -321,40 +324,42 @@ public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				email = user.getEmail();
-				System.out.println("Enviando correo a: " + email);
 
 				sendEmailBtn.setEnabled(false);
-				statusLbl.setText("Enviando mensaje, espere por favor...");
+				statusLbl.setText(
+						"Enviando mensaje... Puede seguir usando el programa, se le notificará cuando el correo haya sido enviado");
+
+				// este otro hilo es para que no te quedes mirando a la pantalla los mil años
+				// que se tarda en enviar el correo y puedas disfrutar de 10s de uso libre del
+				// programa antes de que te salte el optionpane diciendo si se ha enviado o no
 
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
 						try {
 							ArrayList<NewsItem> news = WebReader.getNews(user.getPreferencesList(), true);
-							// lo estoy cambiando porque el correo que manda el admin tiene que ser a la
-							// direccion asociada a su cuenta
-
 							String subject = "NOTICIAS DAM";
-							StringBuilder body = new StringBuilder();
+							String body = "";
 
-							body.append(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()) + "\n");
-							body.append("--------------------------------------------------\n\n");
+							body += new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()) + "\n";
+							body += "--------------------------------------------------\n\n";
 
 							String lastCat = "";
 							for (NewsItem item : news) {
 								if (!item.getCategory().equals(lastCat)) {
-									body.append("\n" + item.getCategory() + ":\n");
+									body += "\n" + item.getCategory() + ":\n";
 									lastCat = item.getCategory();
 								}
-								body.append(item.getHeadline());
+								body += item.getHeadline();
 								if (item.getUrl() != null && !item.getUrl().isEmpty()) {
-									body.append(" [" + item.getUrl() + "]");
+									body += " [" + item.getUrl() + "]";
 								}
-								body.append("\n");
+								body += "\n";
 							}
 
-							EmailLogic.sendEmail(email, subject, body.toString());
+							EmailLogic.sendEmail(email, subject, body);
 
+							// ahora esperamos a que se haya mandado o no para avisar
 							SwingUtilities.invokeLater(() -> {
 								statusLbl.setText("");
 								sendEmailBtn.setEnabled(true);
@@ -400,6 +405,17 @@ public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al 
 			}
 		});
 
+		// para que con darle al enter ya se intente crear el usuario
+		ActionListener createAction = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createUserBtn.doClick();
+			}
+		};
+		usernameTField.addActionListener(createAction);
+		passwordTField.addActionListener(createAction);
+		emailTField.addActionListener(createAction);
+
 		createUserBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -408,6 +424,7 @@ public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al 
 				email = emailTField.getText();
 				role = "user";
 
+				// gracias miguel por ponerme un usuario con ; en el nombre
 				if (username.contains(";") || password.contains(";") || email.contains(";")) {
 					JOptionPane.showMessageDialog(null,
 							"Ese caracter (;) destruirá el formato del .txt...\nNo lo pongas porfa.",
@@ -421,21 +438,30 @@ public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al 
 					return;
 				}
 
+				// por si nos arrepentimos en el último momento
+
 				int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere crear el usuario?");
 				if (JOptionPane.OK_OPTION == resp) {
 					UserLogic.createNewUser(username, password, email, role);
-					System.out.println("Usuario creado");
 				} else {
-					System.out.println("Rechazo de creación de usuario, volviendo...");
 					return;
 				}
+			}
+		});
+
+		// para que con darle al enter ya se intente borrar el usuario, porque ya estaba
+		// harto de tener que hacerlo dando clicks
+		deleteTField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				deleteUserBtn.doClick();
 			}
 		});
 
 		deleteUserBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (UserLogic.usersList.size() < 4) {
+				if (UserLogic.usersList.size() < 5) {
 					JOptionPane.showMessageDialog(null,
 							"No se pueden borrar más usuarios.\nDebe haber al menos 4 usuarios (1 admin + 3 usuarios).",
 							"Error de borrado", JOptionPane.ERROR_MESSAGE);
@@ -448,7 +474,6 @@ public class AdminWindow extends JFrame { //tengo que poner lo de que al dar al 
 				if (JOptionPane.OK_OPTION == resp) {
 					UserLogic.deleteUser(username);
 				} else {
-					System.out.println("Rechazo de borrado de usuario, volviendo...");
 					return;
 				}
 			}

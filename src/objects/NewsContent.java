@@ -1,6 +1,8 @@
 package objects;
 
 public class NewsContent {
+	// esta clase es para guardar la informacion de las urls y selectors
+
 	String category, url1, selector1, url2, selector2, url3, selector3;
 
 	public NewsContent(String category, String url1, String selector1, String url2, String selector2, String url3,

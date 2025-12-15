@@ -21,155 +21,148 @@ import javax.swing.JOptionPane;
 
 public class UserConfigWindow extends JFrame {
 
-    private User user;
+	private User user;
 
-    public UserConfigWindow(User user) {
-        this.user = user;
-        
-        
-        initialize();
-        ImageIcon icono = new ImageIcon("images/logoNoticias.png");
-        this.setIconImage(icono.getImage());
-        this.setVisible(true);
-    }
+	public UserConfigWindow(User user) {
+		this.user = user;
+		initialize();
+		ImageIcon icono = new ImageIcon("images/logoNoticias.png");
+		this.setIconImage(icono.getImage());
+		this.setVisible(true);
+	}
 
-    private void initialize() {
+	private void initialize() {
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
-		
-		JMenu mnAyuda = new JMenu("Ayuda");
-		menuBar.add(mnAyuda);
-		
-		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
-		mntmAcercaDe.addActionListener(new ActionListener() {
+
+		JMenu help = new JMenu("Ayuda");
+		menuBar.add(help);
+
+		JMenuItem about = new JMenuItem("Acerca de");
+		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, 
-						"Desarrollador: Sebastián Silva\nVersión 25.12.12.sangre.lágrimas", 
+				JOptionPane.showMessageDialog(null, "Desarrollador: Sebastián Silva\nVersión sangre.sudor.lágrimas",
 						"Acerca de", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-		mnAyuda.add(mntmAcercaDe);
+		help.add(about);
 
-        this.getContentPane().setBackground(new Color(40, 40, 40));
-        this.setBounds(100, 100, 450, 300);
-        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.getContentPane().setBackground(new Color(40, 40, 40));
+		this.setBounds(100, 100, 450, 300);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-        this.getContentPane().setLayout(null);
-        this.setLocationRelativeTo(null);
-		this.setResizable(false); 
-		
-		
+		this.getContentPane().setLayout(null);
+		this.setLocationRelativeTo(null);
+		this.setResizable(false);
+
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
-				if (JOptionPane.showConfirmDialog(null, 
-					"¿Estás seguro de que quieres salir?", "Cerrar Aplicación", 
-					JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+				if (JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quieres salir?", "Cerrar Aplicación",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 					System.exit(0);
 				}
 			}
 		});
-        this.getContentPane().setLayout(null);
-        this.setLocationRelativeTo(null);
+		this.getContentPane().setLayout(null);
+		this.setLocationRelativeTo(null);
 
-        JLabel headerLabel = new JLabel("Elija el tipo de noticias que le gustaría ver:");
-        headerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        headerLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
-        headerLabel.setForeground(new Color(255, 255, 255));
-        headerLabel.setBounds(10, 11, 416, 69);
-        this.getContentPane().add(headerLabel);
+		JLabel headerLabel = new JLabel("Elija el tipo de noticias que le gustaría ver:");
+		headerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		headerLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
+		headerLabel.setForeground(new Color(255, 255, 255));
+		headerLabel.setBounds(10, 11, 416, 69);
+		this.getContentPane().add(headerLabel);
 
-        JCheckBox economyCBox = new JCheckBox("Economía");
-        economyCBox.setFont(new Font("Tahoma", Font.BOLD, 12));
-        economyCBox.setBackground(new Color(40, 40, 40));
-        economyCBox.setForeground(new Color(255, 255, 255));
-        economyCBox.setBounds(23, 87, 98, 22);
-        this.getContentPane().add(economyCBox);
+		JCheckBox economyCBox = new JCheckBox("Economía");
+		economyCBox.setFont(new Font("Tahoma", Font.BOLD, 12));
+		economyCBox.setBackground(new Color(40, 40, 40));
+		economyCBox.setForeground(new Color(255, 255, 255));
+		economyCBox.setBounds(23, 87, 98, 22);
+		this.getContentPane().add(economyCBox);
 
-        JCheckBox sportsCBox = new JCheckBox("Deportes");
-        sportsCBox.setFont(new Font("Tahoma", Font.BOLD, 12));
-        sportsCBox.setBackground(new Color(40, 40, 40));
-        sportsCBox.setForeground(new Color(255, 255, 255));
-        sportsCBox.setBounds(23, 138, 98, 22);
-        this.getContentPane().add(sportsCBox);
+		JCheckBox sportsCBox = new JCheckBox("Deportes");
+		sportsCBox.setFont(new Font("Tahoma", Font.BOLD, 12));
+		sportsCBox.setBackground(new Color(40, 40, 40));
+		sportsCBox.setForeground(new Color(255, 255, 255));
+		sportsCBox.setBounds(23, 138, 98, 22);
+		this.getContentPane().add(sportsCBox);
 
-        JCheckBox nationalCBox = new JCheckBox("Nacional");
-        nationalCBox.setFont(new Font("Tahoma", Font.BOLD, 12));
-        nationalCBox.setBackground(new Color(40, 40, 40));
-        nationalCBox.setForeground(new Color(255, 255, 255));
-        nationalCBox.setBounds(153, 87, 118, 22);
-        this.getContentPane().add(nationalCBox);
+		JCheckBox nationalCBox = new JCheckBox("Nacional");
+		nationalCBox.setFont(new Font("Tahoma", Font.BOLD, 12));
+		nationalCBox.setBackground(new Color(40, 40, 40));
+		nationalCBox.setForeground(new Color(255, 255, 255));
+		nationalCBox.setBounds(153, 87, 118, 22);
+		this.getContentPane().add(nationalCBox);
 
-        JCheckBox internationalCBox = new JCheckBox("Internacional");
-        internationalCBox.setFont(new Font("Tahoma", Font.BOLD, 12));
-        internationalCBox.setBackground(new Color(40, 40, 40));
-        internationalCBox.setForeground(new Color(255, 255, 255));
-        internationalCBox.setBounds(153, 138, 118, 22);
-        this.getContentPane().add(internationalCBox);
+		JCheckBox internationalCBox = new JCheckBox("Internacional");
+		internationalCBox.setFont(new Font("Tahoma", Font.BOLD, 12));
+		internationalCBox.setBackground(new Color(40, 40, 40));
+		internationalCBox.setForeground(new Color(255, 255, 255));
+		internationalCBox.setBounds(153, 138, 118, 22);
+		this.getContentPane().add(internationalCBox);
 
-        JCheckBox videogamesCBox = new JCheckBox("Videojuegos");
-        videogamesCBox.setFont(new Font("Tahoma", Font.BOLD, 12));
-        videogamesCBox.setBackground(new Color(40, 40, 40));
-        videogamesCBox.setForeground(new Color(255, 255, 255));
-        videogamesCBox.setBounds(290, 87, 114, 22);
-        this.getContentPane().add(videogamesCBox);
+		JCheckBox videogamesCBox = new JCheckBox("Videojuegos");
+		videogamesCBox.setFont(new Font("Tahoma", Font.BOLD, 12));
+		videogamesCBox.setBackground(new Color(40, 40, 40));
+		videogamesCBox.setForeground(new Color(255, 255, 255));
+		videogamesCBox.setBounds(290, 87, 114, 22);
+		this.getContentPane().add(videogamesCBox);
 
-        JCheckBox techCBox = new JCheckBox("Tecnología");
-        techCBox.setFont(new Font("Tahoma", Font.BOLD, 12));
-        techCBox.setBackground(new Color(40, 40, 40));
-        techCBox.setForeground(new Color(255, 255, 255));
-        techCBox.setBounds(290, 138, 114, 22);
-        this.getContentPane().add(techCBox);
+		JCheckBox techCBox = new JCheckBox("Tecnología");
+		techCBox.setFont(new Font("Tahoma", Font.BOLD, 12));
+		techCBox.setBackground(new Color(40, 40, 40));
+		techCBox.setForeground(new Color(255, 255, 255));
+		techCBox.setBounds(290, 138, 114, 22);
+		this.getContentPane().add(techCBox);
 
-        JButton submitCategoriesBtn = new JButton("Seleccionar");
-        submitCategoriesBtn.setBounds(167, 214, 100, 22);
-        this.getContentPane().add(submitCategoriesBtn);
+		JButton submitCategoriesBtn = new JButton("Seleccionar");
+		submitCategoriesBtn.setBounds(167, 214, 100, 22);
+		this.getContentPane().add(submitCategoriesBtn);
 
-        JLabel emptinessWarningLabel = new JLabel("Seleccione al menos una categoría");
+		JLabel emptinessWarningLabel = new JLabel("Seleccione al menos una categoría");
 		emptinessWarningLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
 		emptinessWarningLabel.setVisible(false);
 		emptinessWarningLabel.setForeground(new Color(255, 0, 0));
 		emptinessWarningLabel.setBounds(124, 199, 158, 14);
 		this.getContentPane().add(emptinessWarningLabel);
 
+		submitCategoriesBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (economyCBox.isSelected()) {
+					user.getPreferencesList().add("ECONOMIA");
+				}
+				if (sportsCBox.isSelected()) {
+					user.getPreferencesList().add("DEPORTES");
+				}
+				if (nationalCBox.isSelected()) {
+					user.getPreferencesList().add("NACIONAL");
+				}
+				if (internationalCBox.isSelected()) {
+					user.getPreferencesList().add("INTERNACIONAL");
+				}
+				if (videogamesCBox.isSelected()) {
+					user.getPreferencesList().add("VIDEOJUEGOS");
+				}
+				if (techCBox.isSelected()) {
+					user.getPreferencesList().add("TECNOLOGIA");
+				}
+				if (user.getPreferencesList().isEmpty()) {
+					emptinessWarningLabel.setVisible(true);
+					return;
+				}
 
-        submitCategoriesBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(economyCBox.isSelected()) {
-                    user.getPreferencesList().add("ECONOMIA");
-                }
-                if(sportsCBox.isSelected()) {
-                    user.getPreferencesList().add("DEPORTES");
-                }
-                if(nationalCBox.isSelected()) {
-                    user.getPreferencesList().add("NACIONAL");
-                }
-                if(internationalCBox.isSelected()) {
-                    user.getPreferencesList().add("INTERNACIONAL");
-                }
-                if(videogamesCBox.isSelected()) {
-                    user.getPreferencesList().add("VIDEOJUEGOS");
-                }
-                if(techCBox.isSelected()) {
-                    user.getPreferencesList().add("TECNOLOGIA");
-                }
-
-                if(user.getPreferencesList().isEmpty()) {
-                    emptinessWarningLabel.setVisible(true); 
-                    return;
-                }
-
-                user.setNew(false);
-                UserLogic.writeUserPreferences(user);
-                UserLogic.rewriteUsersFile(); // Guardar estado '1' en users.txt
-                emptinessWarningLabel.setVisible(false); 
-                dispose();
-                
-                new MainWindow(user);
-            }
-        });
-    }
+				// como le hemos metido categorias a un usuario pues lo cambiamos en el txt y le
+				// seteamos como que ya no es nuevo
+				user.setNew(false);
+				UserLogic.writeUserPreferences(user);
+				UserLogic.rewriteUsersFile();
+				emptinessWarningLabel.setVisible(false);
+				dispose();
+				new MainWindow(user);
+			}
+		});
+	}
 }

@@ -7,8 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileNotFoundException;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,7 +19,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
-
 import fileLogic.UserLogic;
 import objects.User;
 
@@ -40,17 +37,17 @@ public class LoginWindow extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
 
-		JMenu mnAyuda = new JMenu("Ayuda");
-		menuBar.add(mnAyuda);
+		JMenu help = new JMenu("Ayuda");
+		menuBar.add(help);
 
-		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
-		mntmAcercaDe.addActionListener(new ActionListener() {
+		JMenuItem about = new JMenuItem("Acerca de");
+		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Desarrollador: Sebastián Silva\nVersión 25.12.12.sangre.lágrimas",
+				JOptionPane.showMessageDialog(null, "Desarrollador: Sebastián Silva\nVersión sangre.sudor.lágrimas",
 						"Acerca de", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-		mnAyuda.add(mntmAcercaDe);
+		help.add(about);
 
 		this.getContentPane().setBackground(new Color(40, 40, 40));
 		this.setBounds(100, 100, 450, 350);
@@ -69,26 +66,22 @@ public class LoginWindow extends JFrame {
 		this.getContentPane().setLayout(null);
 		this.setLocationRelativeTo(null);
 
-		int centerX = 225;
-		int width = 200;
-		int xPos = centerX - (width / 2);
-
 		JLabel headerLabel = new JLabel("Inicio de sesión");
 		headerLabel.setForeground(new Color(255, 255, 255));
 		headerLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
 		headerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		headerLabel.setBounds(xPos, 30, width, 29);
+		headerLabel.setBounds(125, 30, 200, 29);
 		this.getContentPane().add(headerLabel);
 
 		JLabel usernameLabel = new JLabel("Nombre de usuario");
 		usernameLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
 		usernameLabel.setForeground(new Color(255, 255, 255));
 		usernameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		usernameLabel.setBounds(xPos, 80, width, 14);
+		usernameLabel.setBounds(125, 80, 200, 14);
 		this.getContentPane().add(usernameLabel);
 
 		usernameTField = new JTextField();
-		usernameTField.setBounds(xPos, 105, width, 20);
+		usernameTField.setBounds(125, 105, 200, 20);
 		this.getContentPane().add(usernameTField);
 		usernameTField.setColumns(10);
 
@@ -96,11 +89,11 @@ public class LoginWindow extends JFrame {
 		passwordLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
 		passwordLabel.setForeground(new Color(255, 255, 255));
 		passwordLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		passwordLabel.setBounds(xPos, 145, width, 14);
+		passwordLabel.setBounds(125, 145, 200, 14);
 		this.getContentPane().add(passwordLabel);
 
 		passwordTField = new JPasswordField();
-		passwordTField.setBounds(xPos, 170, width, 20);
+		passwordTField.setBounds(125, 170, 200, 20);
 		this.getContentPane().add(passwordTField);
 		passwordTField.setColumns(10);
 
@@ -114,7 +107,7 @@ public class LoginWindow extends JFrame {
 
 		JToggleButton togglePasswordBtn = new JToggleButton();
 
-		togglePasswordBtn.setBounds(xPos + width + 5, 169, 25, 22);
+		togglePasswordBtn.setBounds(330, 169, 25, 22);
 		togglePasswordBtn.setIcon(iconCerrado);
 		togglePasswordBtn.setToolTipText("Mostrar/Ocultar contraseña");
 
@@ -133,7 +126,7 @@ public class LoginWindow extends JFrame {
 		this.getContentPane().add(togglePasswordBtn);
 
 		JButton loginButton = new JButton("Iniciar sesión");
-		loginButton.setBounds(centerX - 56, 230, 112, 23);
+		loginButton.setBounds(169, 230, 112, 23);
 		this.getContentPane().add(loginButton);
 		this.getRootPane().setDefaultButton(loginButton);
 
@@ -142,7 +135,7 @@ public class LoginWindow extends JFrame {
 		passwordWarningLabel.setVisible(false);
 		passwordWarningLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		passwordWarningLabel.setForeground(new Color(255, 32, 32));
-		passwordWarningLabel.setBounds(xPos, 195, width, 14);
+		passwordWarningLabel.setBounds(125, 195, 200, 14);
 		this.getContentPane().add(passwordWarningLabel);
 
 		JLabel usernameWarningLabel = new JLabel("Este campo es obligatorio");
@@ -150,7 +143,7 @@ public class LoginWindow extends JFrame {
 		usernameWarningLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
 		usernameWarningLabel.setVisible(false);
 		usernameWarningLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		usernameWarningLabel.setBounds(xPos, 128, width, 14);
+		usernameWarningLabel.setBounds(125, 128, 200, 14);
 		this.getContentPane().add(usernameWarningLabel);
 
 		JLabel autenticationFailedLabel = new JLabel("Usuario o contraseña incorrectos");
@@ -158,7 +151,7 @@ public class LoginWindow extends JFrame {
 		autenticationFailedLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
 		autenticationFailedLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		autenticationFailedLabel.setVisible(false);
-		autenticationFailedLabel.setBounds(xPos, 260, width, 14);
+		autenticationFailedLabel.setBounds(125, 260, 200, 14);
 		this.getContentPane().add(autenticationFailedLabel);
 
 		loginButton.addActionListener(new ActionListener() {
@@ -174,8 +167,7 @@ public class LoginWindow extends JFrame {
 				for (User u : UserLogic.usersList) {
 					String loadedUser = u.getUsername();
 					String loadedPassword = u.getPassword();
-					
-					System.out.println(u.toString());
+
 					if (loadedUser.equals(username) && loadedPassword.equals(password)) {
 						if (u.getRole().toLowerCase().equals("admin")) {
 							new AdminWindow(u);

@@ -13,6 +13,9 @@ import objects.User;
 
 public class AutoEmailThread extends Thread {
 
+	// con este hilo lo dejo en segundo plano para que se lea la
+	// hora que es y mire si toca enviar correos
+
 	private boolean ranToday = false;
 	private String lastRunDate = "";
 
@@ -21,6 +24,9 @@ public class AutoEmailThread extends Thread {
 		while (true) {
 			try {
 				String configuredTime = ConfigLogic.get("TIME");
+
+				// si no tiene hora puesta pues se duerme un rato con fe que alguien le
+				// establezca una hora
 				if (configuredTime.isEmpty()) {
 					Thread.sleep(60000);
 					continue;
@@ -32,58 +38,62 @@ public class AutoEmailThread extends Thread {
 				String currentTime = timeFormat.format(now);
 				String currentDate = dateFormat.format(now);
 
-
+				// si ya toca mandar correos y no ha mandado ninguno todavia, pues se ejecuta
 				if (currentTime.equals(configuredTime) && !currentDate.equals(lastRunDate)) {
-					System.out.println("Hora de envío de correos detectada: " + currentTime);
 					sendEmailsToAllUsers();
 					lastRunDate = currentDate;
 				}
 
 				Thread.sleep(30000);
 			} catch (InterruptedException e) {
-				System.err.println("Ha ocurrido este problema: " + e.getMessage());
+				MessageUtils.showError(null, "Ha ocurrido este problema: " + e.getMessage(), e);
 			}
 		}
 	}
 
 	private void sendEmailsToAllUsers() {
 		if (UserLogic.usersList.isEmpty()) {
-			System.out.println("No hay usuarios cargados para enviar correos.");
+			MessageUtils.showError(null, "No hay usuarios cargados para enviar correos.");
 			return;
 		}
 
 		for (User user : UserLogic.usersList) {
-			if (user.getEmail() == null || user.getEmail().isEmpty()) continue;
-			
-			System.out.println("Preparando noticias para: " + user.getUsername());
-			
-			ArrayList<NewsItem> news = WebReader.getNews(user.getPreferencesList(), false);
-			
-			if (news.isEmpty()) {
-				System.out.println("Sin noticias para " + user.getUsername());
+			if (user.getEmail() == null || user.getEmail().isEmpty()) {
+				// si no tiene correo pues se salta
 				continue;
 			}
-			
+
+			ArrayList<NewsItem> news = WebReader.getNews(user.getPreferencesList(), false);
+
+			if (news.isEmpty()) {
+				// si no hay noticias pues se salta
+				MessageUtils.showError(null, "Sin noticias para " + user.getUsername());
+				continue;
+			}
+
 			String subject = "NOTICIAS DAM";
-			StringBuilder body = new StringBuilder();
-			
-			body.append(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()) + "\n");
-			body.append("--------------------------------------------------\n\n");
-			
+			String body = "";
+
+			// le metemos mil millones de cosas al body
+
+			body += new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()) + "\n";
+			body += "--------------------------------------------------\n\n";
+
 			String lastCat = "";
 			for (NewsItem item : news) {
 				if (!item.getCategory().equals(lastCat)) {
-					body.append("\n" + item.getCategory() + ":\n");
+					body += "\n" + item.getCategory() + ":\n";
 					lastCat = item.getCategory();
 				}
-				body.append(item.getHeadline());
+				body += item.getHeadline();
 				if (item.getUrl() != null && !item.getUrl().isEmpty()) {
-					body.append(" [" + item.getUrl() + "]");
+					body += " [" + item.getUrl() + "]";
 				}
-				body.append("\n");
+				body += "\n";
 			}
-			
-			EmailLogic.sendEmail(user.getEmail(), subject, body.toString());
+
+			// enviamos
+			EmailLogic.sendEmail(user.getEmail(), subject, body);
 		}
 	}
 }

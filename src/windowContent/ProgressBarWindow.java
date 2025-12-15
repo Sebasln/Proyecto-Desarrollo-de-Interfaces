@@ -11,6 +11,7 @@ import java.awt.Image;
 
 import fileLogic.UserLogic;
 import fileLogic.WebLogic;
+import programLogic.MessageUtils;
 
 public class ProgressBarWindow extends JWindow {
 
@@ -41,20 +42,20 @@ public class ProgressBarWindow extends JWindow {
 				for (int i = 0; i <= 100; i++) {
 					progressBar.setValue(i);
 					try {
-						Thread.sleep(5); // 100 * 0,05 = 5s + lo que se tarde en revisar los archivos, que no debería
+						Thread.sleep(50); // 100 * 0,05 = 5s + lo que se tarde en revisar los archivos, que no debería
 											// ser nada.
 					} catch (InterruptedException e) {
-						System.err.println("Ha ocurrido este problema: " + e.getMessage());
+						MessageUtils.showError(null, "Ha ocurrido este problema: " + e.getMessage(), e);
 					}
 
 					if (i == 80) {
 						try {
 							UserLogic.readUsers();
-							UserLogic.readUserPreferences();							
+							UserLogic.readUserPreferences();
 							WebLogic.setNewsProperties();
-						} catch (FileNotFoundException e) {
+						} catch (Exception e) {
 							JOptionPane.showMessageDialog(null,
-									"Error crítico: Faltan archivos de sistema (users.txt o settings.txt).\nLa aplicación se cerrará.",
+									"Error crítico al cargar datos (users.txt/settings.txt):\n" + e.getMessage() + "\nLa aplicación se cerrará.",
 									"Error Fatal", JOptionPane.ERROR_MESSAGE);
 							System.exit(1);
 						}

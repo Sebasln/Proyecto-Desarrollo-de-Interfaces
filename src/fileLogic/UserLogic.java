@@ -1,5 +1,6 @@
 package fileLogic;
 
+import javax.swing.JOptionPane;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,51 +9,57 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import objects.User;
+import programLogic.MessageUtils;
 
 public class UserLogic {
 
 	static public ArrayList<User> usersList = new ArrayList<>();
 
 	public static void readUsers() throws FileNotFoundException {
-		usersList.clear(); // Evitar duplicados si se llama mÃ¡s de una vez
+		usersList.clear(); // antes me la lio repitiendo usuarios
 
 		File users = new File("txtFiles/users.txt");
 
 		if (!(users.exists())) {
-			System.err.println("No existe users.txt, por lo que no se pueden cargar los usuarios");
-			return;
+			MessageUtils.showError(null, "No existe users.txt, por lo que no se pueden cargar los usuarios");
+			return; // por si magicamente se borra users.txt
 		}
 		try (FileReader fr = new FileReader(users); BufferedReader br = new BufferedReader(fr);) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				if (line.trim().isEmpty())
+				if (line.trim().isEmpty()) {
 					continue;
+				}
 
 				String[] userFields = line.split(";", -1);
+				if (userFields.length < 4) {
+					MessageUtils.showError(null, "Línea mal formada en users.txt (faltan campos): " + line);
+					continue;
+				}
+
 				String username = checkNullity(userFields[0], 0);
 				String password = checkNullity(userFields[1], 1);
 				String email = checkNullity(userFields[2], 2);
 				String userRole = checkRole(userFields[3]);
-				
-				// Leer estado (campo 4)
+
+				// como la version 20 de leer si es nuevo o no
 				boolean isNew = true;
 				if (userFields.length > 4) {
 					try {
 						int stateInt = Integer.parseInt(userFields[4].trim());
 						isNew = checkState(stateInt);
 					} catch (NumberFormatException e) {
-						System.err.println("Error parseando estado para " + username + ", asumiendo nuevo.");
+						MessageUtils.showError(null, "Error parseando estado para " + username + ", asumiendo nuevo.");
 					}
 				}
 
 				User user = new User(username, password, email, userRole, isNew, new ArrayList<>());
-
+				// le metemos un arraylist vacio y ya luego lo rellenamos
 				usersList.add(user);
 			}
 		} catch (IOException e) {
-			System.err.println("Ha ocurrido este problema: " + e.getMessage());
+			MessageUtils.showError(null, "Ha ocurrido este problema: " + e.getMessage(), e);
 		}
 	}
 
@@ -60,9 +67,9 @@ public class UserLogic {
 		File usersPreferences = new File("txtFiles/settings.txt");
 
 		if (!(usersPreferences.exists())) {
-			System.err
-					.println("No existe settings.txt, por lo que no se pueden cargar las preferencias de los usuarios");
-			return;
+			MessageUtils.showError(null,
+					"No existe settings.txt, por lo que no se pueden cargar las preferencias de los usuarios");
+			return; // de nuevo, por si magicamente se borra settings.txt
 		}
 
 		try (BufferedReader br = new BufferedReader(new FileReader(usersPreferences))) {
@@ -94,13 +101,9 @@ public class UserLogic {
 						for (User u : usersList) {
 							if (u.getUsername().equals(username)) {
 								u.setPreferencesList(userPreferences);
-								
-								// Si tiene preferencias (> 0), ya no es nuevo.
-								// Excluyendo ADMIN si es necesario, aunque el ADMIN suele tener isNew=false por defecto o se ignora.
 								if (u.getPreferencesList().size() > 0 && !u.getRole().equalsIgnoreCase("ADMIN")) {
 									u.setNew(false);
 								} else if (!u.getRole().equalsIgnoreCase("ADMIN")) {
-									// Si no es admin y no tiene preferencias, es nuevo.
 									u.setNew(true);
 								}
 							}
@@ -109,60 +112,66 @@ public class UserLogic {
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("Ha ocurrido este problema: " + e.getMessage());
+			MessageUtils.showError(null, "Ha ocurrido este problema: " + e.getMessage(), e);
 		}
 	}
 
 	public static void writeUserPreferences(User user) {
 		File usersPreferences = new File("txtFiles/settings.txt");
+		ArrayList<String> linesToPreserve = new ArrayList<>();
 
-		// No check for existence, we will create/overwrite it to ensure structure.
+		if (usersPreferences.exists()) {
+			try (BufferedReader br = new BufferedReader(new FileReader(usersPreferences))) {
+				String line;
+				while ((line = br.readLine()) != null) {
+					String trimmed = line.trim();
+					if (trimmed.startsWith("SECTION;USERS_PREFERENCES")) {
+						break;
+					}
+					linesToPreserve.add(line);
+				}
+			} catch (IOException e) {
+				MessageUtils.showError(null, "Error leyendo settings.txt para preservar configuración: " + e.getMessage(), e);
+			}
+		}
+
+		// Eliminar lineas vacias al final para evitar crecimiento infinito de huecos
+		while (!linesToPreserve.isEmpty() && linesToPreserve.get(linesToPreserve.size() - 1).trim().isEmpty()) {
+			linesToPreserve.remove(linesToPreserve.size() - 1);
+		}
 
 		try (FileWriter fw = new FileWriter(usersPreferences); BufferedWriter bw = new BufferedWriter(fw)) {
-			
-			// 1. Escribir la Sección de URLs (Hardcoded para asegurar integridad)
-			bw.write("SECTION;URL");
-			bw.newLine();
-			bw.write("NACIONAL;https://elpais.com/espana/;article h2 a;https://www.elmundo.es/espana.html;article header a;https://www.abc.es/espana/;article h2 a");
-			bw.newLine();
-			bw.write("INTERNACIONAL;https://elpais.com/internacional/;article h2 a;https://www.elmundo.es/internacional.html;article header a;https://www.abc.es/internacional/;article h2 a");
-			bw.newLine();
-			bw.write("ECONOMIA;https://elpais.com/economia/;article h2 a;https://www.elmundo.es/economia.html;article header a;https://www.abc.es/economia/;article h2 a");
-			bw.newLine();
-			bw.write("DEPORTES;https://as.com/;article h2 a;https://www.marca.com/;div.ue-c-cover-content__body h2 a;https://www.sport.es/;article h2 a");
-			bw.newLine();
-			bw.write("TECNOLOGIA;https://elpais.com/tecnologia/;article h2 a;https://www.elmundo.es/tecnologia.html;article header a;https://www.abc.es/tecnologia/;article h2 a");
-			bw.newLine();
-			bw.write("VIDEOJUEGOS;https://vandal.elespanol.com/;div.caja h2 a;https://www.3djuegos.com/;article h2 a;https://www.hobbyconsolas.com/;article h2 a");
-			bw.newLine();
+			for (String line : linesToPreserve) {
+				bw.write(line);
+				bw.newLine();
+			}
 
-			// 2. Escribir la Sección de Preferencias
+			// para reescribir la seccion de preferencias
+			bw.newLine();
 			bw.write("SECTION;USERS_PREFERENCES");
 			bw.newLine();
 
 			for (int i = 0; i < usersList.size(); i++) {
 				User u = usersList.get(i);
-				System.out.println("DEBUG: Guardando preferencias para " + u.getUsername() + " (Cats: " + (u.getPreferencesList() != null ? u.getPreferencesList().size() : 0) + ")");
 				bw.write(u.getUsername());
 				if (u.getPreferencesList() != null) {
 					for (String category : u.getPreferencesList()) {
 						bw.write(";" + category);
 					}
 				}
-				// Solo añadimos nueva línea si NO es el último elemento
 				if (i < usersList.size() - 1) {
 					bw.newLine();
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("Ha ocurrido este problema: " + e.getMessage());
+			MessageUtils.showError(null, "Ha ocurrido este problema: " + e.getMessage(), e);
 		}
 	}
 
 	public static void createNewUser(String username, String password, String email, String role) {
 		for (User u : usersList) {
 			if (u.getUsername().equals(username)) {
-				System.err.println("El usuario ya existe.");
+				MessageUtils.showError(null, "El usuario ya existe.");
 				return;
 			}
 		}
@@ -171,23 +180,28 @@ public class UserLogic {
 		usersList.add(newUser);
 
 		appendUserToFile(newUser);
-		
-		// Actualizar settings.txt para incluir al nuevo usuario
-		writeUserPreferences(newUser); 
+		writeUserPreferences(newUser);
 	}
 
 	public static void appendUserToFile(User u) {
 		File usersFile = new File("txtFiles/users.txt");
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(usersFile, true))) {
-			bw.newLine(); // Salto de línea inicial para separar del usuario anterior
-			
-			int state = u.isNew() ? 0 : 1;
-			String line = u.getUsername() + ";" + u.getPassword() + ";" + u.getEmail() + ";" + u.getRole() + ";" + state;
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(usersFile, true))) { // poner ejemplo ejercicio fran
+			bw.newLine(); // para que no me escriba un usuario detras de otro sin saltar de linea
+
+			int state;
+			if (u.isNew()) {
+				state = 0;
+			} else {
+				state = 1;
+			}
+			String line = u.getUsername() + ";" + u.getPassword() + ";" + u.getEmail() + ";" + u.getRole() + ";"
+					+ state;
 			bw.write(line);
-			
-			System.out.println("Usuario guardado en users.txt: " + u.getUsername());
+
+			JOptionPane.showMessageDialog(null, "Usuario guardado correctamente: " + u.getUsername(), "Usuario Creado",
+					JOptionPane.INFORMATION_MESSAGE);
 		} catch (IOException e) {
-			System.err.println("Ha ocurrido este problema: " + e.getMessage());
+			MessageUtils.showError(null, "Ha ocurrido este problema: " + e.getMessage(), e);
 		}
 	}
 
@@ -203,11 +217,12 @@ public class UserLogic {
 		if (userToRemove != null) {
 			usersList.remove(userToRemove);
 			rewriteUsersFile();
-			// Actualizamos también settings.txt para borrar sus preferencias
-			writeUserPreferences(null); 
-			System.out.println("Usuario eliminado con éxito: " + username);
+			writeUserPreferences(null);
+			JOptionPane.showMessageDialog(null, "Usuario eliminado con éxito: " + username, "Éxito",
+					JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			System.err.println("No se encontró el usuario: " + username);
+			JOptionPane.showMessageDialog(null, "No se encontró el usuario: " + username, "Error",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -216,18 +231,24 @@ public class UserLogic {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(usersFile, false))) {
 			for (int i = 0; i < usersList.size(); i++) {
 				User u = usersList.get(i);
-				int state = u.isNew() ? 0 : 1;
-				String line = u.getUsername() + ";" + u.getPassword() + ";" + u.getEmail() + ";" + u.getRole() + ";" + state;
-				
+				int state;
+				if (u.isNew()) {
+					state = 0;
+				} else {
+					state = 1;
+				}
+				String line = u.getUsername() + ";" + u.getPassword() + ";" + u.getEmail() + ";" + u.getRole() + ";"
+						+ state;
+
 				bw.write(line);
-				
-				// Solo añadimos nueva línea si NO es el último elemento
+
+				// para que no me escriba un usuario detras de otro sin saltar de linea
 				if (i < usersList.size() - 1) {
 					bw.newLine();
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("Ha ocurrido este problema: " + e.getMessage());
+			MessageUtils.showError(null, "Ha ocurrido este problema: " + e.getMessage(), e);
 		}
 	}
 
@@ -239,7 +260,7 @@ public class UserLogic {
 		} else if (givenState == -1) {
 			return false;
 		} else {
-			System.err.println("Error de estado de usuario, devolviendo TRUE...");
+			MessageUtils.showError(null, "Error de estado de usuario, devolviendo TRUE...");
 			return true;
 		}
 	}
@@ -250,7 +271,7 @@ public class UserLogic {
 		} else if (givenRole.toLowerCase().equals("user")) {
 			return "USER";
 		} else {
-			System.err.println("Error de rol de usuario, estableciendo el rol como 'USUARIO'");
+			MessageUtils.showError(null, "Error de rol de usuario, estableciendo el rol como 'USUARIO'");
 			return "USER";
 		}
 	}
@@ -260,17 +281,17 @@ public class UserLogic {
 
 			switch (position) {
 			case 0:
-				System.err
-						.println("Se ha detectado que el nombre de un usuario está vacío, restableciendo como 'user'");
+				MessageUtils.showError(null,
+						"Se ha detectado que el nombre de un usuario está vacío, restableciendo como 'user'");
 				field = "user";
 				break;
 			case 1:
-				System.err.println(
+				MessageUtils.showError(null,
 						"Se ha detectado que la contraseña de un usuario está vacía, restableciendo como '0000'");
 				field = "0000";
 				break;
 			case 2:
-				System.err.println(
+				MessageUtils.showError(null,
 						"Se ha detectado que la dirección de correo de un usuario está vacía, restableciendo como 'user@gmail.com'");
 				field = "user@gmail.com";
 				break;
