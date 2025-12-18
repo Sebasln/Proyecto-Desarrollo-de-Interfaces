@@ -1,14 +1,14 @@
-SECTION;URL;
+SECTION;URL
 ECONOMIA;https://www.expansion.com/;h2;https://cincodias.elpais.com/;h2.c_t;https://www.eleconomista.es/;h2
 DEPORTES;https://www.marca.com/;h2 a;https://as.com/;h2 a;https://www.diariogol.com/;h2 a
 NACIONAL;https://www.elmundo.es/;h2;https://www.larazon.es/;h2;https://elpais.com/;h2.c_t
 TECNOLOGIA;https://es.wired.com/;h3;https://www.silicon.es/;h2;https://revistabyte.es/;h2
 VIDEOJUEGOS;https://vandal.elespanol.com/;h2;https://www.hobbyconsolas.com/;article h2;https://as.com/meristation/;h2
 INTERNACIONAL;https://www.20minutos.es/;h2;https://www.bbc.com/mundo;h2;https://www.europapress.es/;h2
-SECTION;FROM_EMAIL_CONFIGURATION;
-FROM_EMAIL_ADDRESS;sebastian.silva1.dosa@gmail.com;
-FROM_EMAIL_PASSWORD;scwi osdz jpta kzeq;
-
+SECTION;FROM_EMAIL_CONFIGURATION
+FROM_EMAIL_ADDRESS;sebastian.silva1.dosa@gmail.com
+FROM_EMAIL_PASSWORD;scwi osdz jpta kzeq
+TIME;10
 SECTION;USERS_PREFERENCES
 admin
 roberto

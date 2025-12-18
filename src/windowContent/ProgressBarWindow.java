@@ -1,6 +1,7 @@
 package windowContent;
 
-import java.io.FileNotFoundException;
+import java.net.InetAddress;
+
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
@@ -42,7 +43,7 @@ public class ProgressBarWindow extends JWindow {
 				for (int i = 0; i <= 100; i++) {
 					progressBar.setValue(i);
 					try {
-						Thread.sleep(50); // 100 * 0,05 = 5s + lo que se tarde en revisar los archivos, que no debería
+						Thread.sleep(1); // 100 * 0,05 = 5s + lo que se tarde en revisar los archivos, que no debería
 											// ser nada.
 					} catch (InterruptedException e) {
 						MessageUtils.showError(null, "Ha ocurrido este problema: " + e.getMessage(), e);
@@ -53,9 +54,19 @@ public class ProgressBarWindow extends JWindow {
 							UserLogic.readUsers();
 							UserLogic.readUserPreferences();
 							WebLogic.setNewsProperties();
+							InetAddress direccion = InetAddress.getByName("8.8.8.8");
+							if (!direccion.isReachable(3000)) {
+								JOptionPane.showMessageDialog(null,
+										"Error: no hay conexión a internet.\nLa aplicación se cerrará.",
+										"Error Fatal", JOptionPane.ERROR_MESSAGE);
+								System.exit(1);
+								
+							}
+
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(null,
-									"Error crítico al cargar datos (users.txt/settings.txt):\n" + e.getMessage() + "\nLa aplicación se cerrará.",
+									"Error crítico al cargar datos (users.txt/settings.txt) o no hay conexión a internet:\n"
+											+ e.getMessage() + "\nLa aplicación se cerrará.",
 									"Error Fatal", JOptionPane.ERROR_MESSAGE);
 							System.exit(1);
 						}

@@ -11,7 +11,9 @@ import objects.NewsContent;
 import objects.NewsItem;
 
 public class WebReader {
+
 	public static ArrayList<NewsItem> getNews(ArrayList<String> prefs, boolean isAdmin) {
+
 		ArrayList<NewsItem> res = new ArrayList<>();
 		if (WebLogic.newsList == null) {
 			MessageUtils.showError(null, "No hay noticias cargadas");

@@ -2,6 +2,8 @@ package programLogic;
 
 import java.awt.Component;
 import java.awt.Dimension;
+
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -9,22 +11,21 @@ import javax.swing.JTextArea;
 public class MessageUtils {
 
     public static void showError(Component parent, String message, Throwable e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(message).append("\n\n");
+        String finalMessage = message;
         if (e != null) {
-            sb.append("Excepción: ").append(e.toString()).append("\n");
-            for (StackTraceElement ste : e.getStackTrace()) {
-                sb.append("\tat ").append(ste.toString()).append("\n");
-            }
+            finalMessage += "\nDetalles: " + e.toString();
         }
 
-        JTextArea textArea = new JTextArea(sb.toString());
+        JTextArea textArea = new JTextArea(finalMessage);
         textArea.setEditable(false);
-        textArea.setLineWrap(false); // Stack traces are better without wrap usually, or we can enable it
-        textArea.setWrapStyleWord(true); // If we enable wrap
-        
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setBackground(null);
+        textArea.setFont(new JLabel().getFont());
+
         JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(600, 300));
+        scrollPane.setBorder(null);
+        scrollPane.setPreferredSize(new Dimension(400, 60));
 
         JOptionPane.showMessageDialog(parent, scrollPane, "Error", JOptionPane.ERROR_MESSAGE);
     }

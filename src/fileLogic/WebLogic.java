@@ -13,7 +13,7 @@ import programLogic.MessageUtils;
 
 public class WebLogic {
 	public static ArrayList<NewsContent> newsList = new ArrayList<>();
-
+	
 	public static void setNewsProperties() {
 		newsList.clear();
 		File settingsFile = new File("txtFiles/settings.txt");
